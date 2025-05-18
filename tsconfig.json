@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src/**/*", "index.ts", "types/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
