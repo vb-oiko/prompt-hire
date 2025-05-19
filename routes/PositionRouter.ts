@@ -98,8 +98,8 @@ positionRouter.post(
 );
 
 // Delete position
-positionRouter.delete(
-  "/:id",
+positionRouter.post(
+  "/:id/delete",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
       await PositionTable.update(Number(req.params.id), {

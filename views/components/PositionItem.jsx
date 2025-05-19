@@ -33,6 +33,18 @@ const PositionItem = ({ position }) => {
               </a>
             </li>
             <li>
+              <strong>Job Title:</strong> {position.title}
+            </li>
+            <li>
+              <strong>Company:</strong> {position.company}
+            </li>
+            <li>
+              <strong>Location:</strong> {position.location}
+            </li>
+            <li>
+              <strong>Salary:</strong> {position.salary}
+            </li>
+            <li>
               <strong>Description:</strong> {position.description}
             </li>
           </ul>

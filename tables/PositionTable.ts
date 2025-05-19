@@ -52,7 +52,10 @@ async function create(position: Position): Promise<void> {
 }
 
 async function list(): Promise<Position[]> {
-  return await db.all("SELECT * FROM positions ORDER BY createdAt DESC");
+  return await db.all(
+    `SELECT * FROM positions WHERE status != ? ORDER BY createdAt DESC`,
+    [POSITION_STATUS.ARCHIVED]
+  );
 }
 
 async function getById(id: number): Promise<Position | undefined> {
