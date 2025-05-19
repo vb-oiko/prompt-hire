@@ -11,6 +11,7 @@ const ActionButton = ({
   label,
   className = "primary",
   children,
+  disabled = false,
 }) => {
   return (
     <form method={method} action={action}>

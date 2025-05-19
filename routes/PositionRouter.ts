@@ -3,9 +3,12 @@ import type { Request, Response, NextFunction } from "express";
 import PositionTable, { Position } from "../tables/PositionTable.ts";
 import { POSITION_STATUS } from "../tables/PositionTable.ts";
 import { extractPositionInfo } from "../services/ai/prompts/ExtractPositionInfoPrompt.ts";
-import { optimizeResume } from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
+import {
+  optimizeResume,
+  ResumeSchema,
+} from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
 import UserInfoTable from "../tables/UserInfoTable.ts";
-
+import { createDocuments } from "../services/GDocService.ts";
 interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -163,19 +166,50 @@ positionRouter.post(
         return;
       }
 
-      const { optimizedResume, keySkills, suggestedImprovements } =
-        await optimizeResume({
-          resume: userInfo.resume,
-          jobDescription: position.description,
-        });
+      const resume = await optimizeResume({
+        resume: userInfo.resume,
+        jobDescription: position.description,
+      });
 
       await PositionTable.update(position.id, {
-        optimizedResume: optimizedResume,
-        keySkills: keySkills.join("\n"),
-        suggestedImprovements: suggestedImprovements.join("\n"),
+        optimizedResume: JSON.stringify(resume, null, 2),
       });
 
       res.redirect(`/positions`);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Create documents
+positionRouter.post(
+  "/:id/create-documents",
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const position = await PositionTable.getById(Number(req.params.id));
+
+      if (!position) {
+        res.status(404).send("Position not found");
+        return;
+      }
+      if (!position.optimizedResume) {
+        res.status(400).send("Resume is not optimized");
+        return;
+      }
+
+      const resume = JSON.parse(position.optimizedResume);
+      console.dir(resume, { depth: null });
+      ResumeSchema.parse(resume);
+
+      const documents = await createDocuments(position.company, resume);
+
+      await PositionTable.update(position.id, {
+        resumeUrl: documents.resumeUrl,
+        coverLetterUrl: documents.coverLetterUrl,
+      });
+
+      res.redirect(`/positions/${req.params.id}`);
     } catch (error) {
       next(error);
     }

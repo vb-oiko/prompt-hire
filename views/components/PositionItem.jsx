@@ -37,6 +37,11 @@ const PositionItem = ({ position }) => {
               label="Optimize Resume"
             />
             <ActionButton
+              action={`/positions/${position.id}/create-documents`}
+              label="Create Documents"
+              disabled={Boolean(position.optimizedResume)}
+            />
+            <ActionButton
               action={`/positions/${position.id}`}
               method="GET"
               label="Edit"
@@ -67,18 +72,23 @@ const PositionItem = ({ position }) => {
             <li>
               <strong>Salary:</strong> {position.salary}
             </li>
+            {position.resumeUrl && (
+              <li>
+                <a
+                  href={position.resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Optimized Resume
+                </a>
+              </li>
+            )}
             <li>
               <strong>Description:</strong> {position.description}
             </li>
             <li>
-              <strong>Optimized Resume:</strong> {position.optimizedResume}
-            </li>
-            <li>
-              <strong>Key Skills:</strong> {position.keySkills}
-            </li>
-            <li>
-              <strong>Suggested Improvements:</strong>{" "}
-              {position.suggestedImprovements}
+              <strong>Optimized Resume:</strong>
+              <pre>{position.optimizedResume}</pre>
             </li>
           </ul>
         </article>

@@ -1,5 +1,5 @@
 const React = require("react");
-const Layout = require("./components/Layout.tsx");
+const Layout = require("./components/Layout");
 
 const HomeView = () => {
   return (

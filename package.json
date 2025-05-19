@@ -4,7 +4,7 @@
   "description": "PromptHire",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "tsx watch index.ts",
     "prod": "tsx index.ts",
     "typecheck": "tsc --noEmit",
@@ -31,7 +31,10 @@
     "tslint-config-prettier": "^1.18.0",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1"
+    "typescript-eslint": "^8.32.1",
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2"
   },
   "dependencies": {
     "@types/react": "^19.1.4",
@@ -40,12 +43,15 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-react-views": "^0.11.0",
+    "google-auth-library": "^9.15.1",
+    "googleapis": "^148.0.0",
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
     "openai": "^4.100.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sqlite3": "^5.1.7",
-    "zod": "^3.24.4"
+    "zod": "^3.25.3",
+    "zod-to-json-schema": "^3.24.5"
   }
 }

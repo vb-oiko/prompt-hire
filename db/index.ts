@@ -34,8 +34,8 @@ function initDb(db: sqlite3.Database): void {
         status TEXT NOT NULL CHECK(status IN (${POSITION_STATUSES.map((status) => `'${status}'`).join(",")})) DEFAULT ${POSITION_STATUS.NEW},
         userId INTEGER NOT NULL,
         optimizedResume TEXT,
-        keySkills TEXT,
-        suggestedImprovements TEXT,
+        resumeUrl TEXT,
+        coverLetterUrl TEXT,
         createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
