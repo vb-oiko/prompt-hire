@@ -28,13 +28,16 @@ export interface Position {
   tags?: string;
   status: PositionStatus;
   userId: number;
+  optimizedResume?: string;
+  keySkills?: string;
+  suggestedImprovements?: string;
   createdAt: string;
   updatedAt: string;
 }
 
 async function create(position: Position): Promise<void> {
   await db.run(
-    "INSERT INTO positions (title, description, url, company, location, salary, tags, status, userId, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO positions (title, description, url, company, location, salary, tags, status, userId, optimizedResume, keySkills, suggestedImprovements, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       position.title,
       position.description,
@@ -45,6 +48,9 @@ async function create(position: Position): Promise<void> {
       position.tags,
       position.status,
       position.userId,
+      position.optimizedResume,
+      position.keySkills,
+      position.suggestedImprovements,
       position.createdAt,
       position.updatedAt,
     ]

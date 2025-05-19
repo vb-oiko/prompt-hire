@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const MODEL = "gpt-4o-mini";
+const MODEL = "gpt-4o";
 
 import OpenAI from "openai";
 import { OPENAI_API_KEY } from "../../const";

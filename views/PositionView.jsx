@@ -1,6 +1,7 @@
 const React = require("react");
 const Layout = require("./components/Layout");
 const InputField = require("./components/InputField");
+const ActionButton = require("./components/ActionButton");
 
 /**
  * Position detail view component
@@ -16,8 +17,14 @@ const PositionView = ({ position = {}, mode = "edit" }) => {
   return (
     <Layout title={`${title} - PromptHire`}>
       <article>
-        <header>
+        <header className="grid">
           <h1>{title}</h1>
+          <div style={{ marginLeft: "auto" }}>
+            <ActionButton
+              action={`/positions/${position.id}/parse`}
+              label="Parse"
+            />
+          </div>
         </header>
 
         <form

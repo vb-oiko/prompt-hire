@@ -3,6 +3,8 @@ import type { Request, Response, NextFunction } from "express";
 import PositionTable, { Position } from "../tables/PositionTable.ts";
 import { POSITION_STATUS } from "../tables/PositionTable.ts";
 import { extractPositionInfo } from "../services/ai/prompts/ExtractPositionInfoPrompt.ts";
+import { optimizeResume } from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
+import UserInfoTable from "../tables/UserInfoTable.ts";
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -17,8 +19,8 @@ positionRouter.get(
   "/",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const positionsList = await PositionTable.list();
-      res.render("PositionsView", { positions: positionsList });
+      const positions = await PositionTable.list();
+      res.render("PositionsView", { positions });
     } catch (error) {
       next(error);
     }
@@ -106,6 +108,74 @@ positionRouter.post(
         status: POSITION_STATUS.ARCHIVED,
       });
       res.redirect("/positions");
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Parse position
+positionRouter.post(
+  "/:id/parse",
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const position = await PositionTable.getById(Number(req.params.id));
+
+      if (!position) {
+        res.status(404).send("Position not found");
+        return;
+      }
+
+      const positionInfo = await extractPositionInfo({
+        description: position.description,
+      });
+
+      await PositionTable.update(position.id, {
+        title: positionInfo.title || undefined,
+        company: positionInfo.company || undefined,
+        location: positionInfo.location || undefined,
+        salary: positionInfo.salary || undefined,
+      });
+
+      res.redirect(`/positions/${req.params.id}`);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Optimize resume
+positionRouter.post(
+  "/:id/optimize",
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const position = await PositionTable.getById(Number(req.params.id));
+
+      if (!position) {
+        res.status(404).send("Position not found");
+        return;
+      }
+
+      const userInfo = await UserInfoTable.getUserInfo(position.userId);
+
+      if (!userInfo) {
+        res.status(404).send("User not found");
+        return;
+      }
+
+      const { optimizedResume, keySkills, suggestedImprovements } =
+        await optimizeResume({
+          resume: userInfo.resume,
+          jobDescription: position.description,
+        });
+
+      await PositionTable.update(position.id, {
+        optimizedResume: optimizedResume,
+        keySkills: keySkills.join("\n"),
+        suggestedImprovements: suggestedImprovements.join("\n"),
+      });
+
+      res.redirect(`/positions`);
     } catch (error) {
       next(error);
     }

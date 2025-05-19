@@ -1,4 +1,5 @@
 const React = require("react");
+const ActionButton = require("./ActionButton");
 
 /**
  * Position item component that displays position details in an accordion
@@ -9,22 +10,44 @@ const PositionItem = ({ position }) => {
   return (
     <details>
       <summary>
-        <div>
-          <strong>{position.title || "New position"}</strong>
-          {position.company && (
-            <span>
-              &ensp;at <strong>{position.company}</strong>
-            </span>
-          )}
-          {position.location && (
-            <span>
-              &ensp;in <strong>{position.location}</strong>
-            </span>
-          )}
+        <div className="grid">
+          <div>
+            <strong>{position.title || "New position"}</strong>
+            {position.company && (
+              <span>
+                &ensp;at <strong>{position.company}</strong>
+              </span>
+            )}
+            {position.location && (
+              <span>
+                &ensp;in <strong>{position.location}</strong>
+              </span>
+            )}
+          </div>
+          <div
+            role="group"
+            style={{ width: "fit-content", marginLeft: "auto" }}
+          >
+            <ActionButton
+              action={`/positions/${position.id}/parse`}
+              label="Parse Description"
+            />
+            <ActionButton
+              action={`/positions/${position.id}/optimize`}
+              label="Optimize Resume"
+            />
+            <ActionButton
+              action={`/positions/${position.id}`}
+              method="GET"
+              label="Edit"
+              className="secondary"
+            />
+          </div>
         </div>
       </summary>
       <div>
         <article>
+          <header></header>
           <ul>
             <li>
               <strong>Job URL:</strong>{" "}
@@ -47,12 +70,17 @@ const PositionItem = ({ position }) => {
             <li>
               <strong>Description:</strong> {position.description}
             </li>
+            <li>
+              <strong>Optimized Resume:</strong> {position.optimizedResume}
+            </li>
+            <li>
+              <strong>Key Skills:</strong> {position.keySkills}
+            </li>
+            <li>
+              <strong>Suggested Improvements:</strong>{" "}
+              {position.suggestedImprovements}
+            </li>
           </ul>
-          <footer role="group" style={{ width: "auto" }}>
-            <a href={`/positions/${position.id}`} role="button">
-              Edit
-            </a>
-          </footer>
         </article>
       </div>
     </details>
