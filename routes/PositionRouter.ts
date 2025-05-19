@@ -1,7 +1,8 @@
 import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
-import PositionTable from "../tables/PositionTable.ts";
+import PositionTable, { Position } from "../tables/PositionTable.ts";
 import { POSITION_STATUS } from "../tables/PositionTable.ts";
+import { extractPositionInfo } from "../services/ai/prompts/ExtractPositionInfoPrompt.ts";
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -41,12 +42,17 @@ positionRouter.post(
     next: NextFunction
   ) {
     try {
-      const position = {
+      const positionInfo = await extractPositionInfo({
+        description: req.body.description,
+      });
+
+      const position: Position = {
         ...req.body,
         status: POSITION_STATUS.NEW,
         userId: req.user?.id || 1, // TODO: Replace with actual user ID from session
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        ...positionInfo,
       };
 
       await PositionTable.create(position);
