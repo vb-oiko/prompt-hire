@@ -75,13 +75,24 @@ const PositionView = ({ position = {}, mode = "edit" }) => {
             defaultValue={position.tags || ""}
           /> */}
 
-          <footer>
-            <button type="submit" role="button">
+          <footer role="group" style={{ width: "auto" }}>
+            <button type="submit">
               {isCreateMode ? "Create Position" : "Save Changes"}
             </button>
+
             <a href="/positions" role="button" className="secondary">
               Cancel
             </a>
+
+            {!isCreateMode && (
+              <a
+                href={`/positions/${position.id}/delete`}
+                role="button"
+                className="contrast"
+              >
+                Delete
+              </a>
+            )}
           </footer>
         </form>
       </article>
