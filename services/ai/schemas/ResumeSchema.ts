@@ -65,10 +65,10 @@ export const ResumeSchema = z.object({
         ),
     })
   ),
-  additionalSkills: z
+  skills: z
     .array(z.string())
     .describe(
-      "Additional skills that the person has that are not listed in the experience, education, or volunteering"
+      "Nine skills that the person has that are not listed in the experience, education, or volunteering. Three words long or less each"
     ),
   volunteering: z.array(
     z.object({

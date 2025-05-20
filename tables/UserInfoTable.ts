@@ -29,19 +29,22 @@ export const getUserInfo = async (id: number): Promise<UserInfo> => {
     WORK EXPERIENCE
     VIV Technologies • Toronto, ON • 09/2024 - 05/2025
     Full Stack Developer
-    Led the implementation of a critical data import project, projected to reduce client onboarding time and significantly accelerate time-to-value.
-    Migrated legacy AngularJS components to React, resulting in a 20% reduction in JavaScript bundle size and a 10% improvement in page load speed, enhancing overall user experience for web applications.
-    Delivered key UI/UX enhancements that streamlined workflows and reduced user actions by 30%, improving efficiency and usability of web applications.
-    Bolt.Eu • Tallinn, Harjumaa, Estonia • 06/2020 - 09/2024
+    Joined the team of two developers on data integration team to support and build new integrations with third party services to improve end user experience.
+    - Led the implementation of a critical data import project, projected to reduce client onboarding time by 5 times and significantly accelerate time-to-value.
+    - Migrated legacy AngularJS components to React, resulting in a 20% reduction in JavaScript bundle size and a 10% improvement in page load speed, enhancing overall user experience for web applications.
+    - Delivered key UI/UX enhancements that streamlined workflows and reduced user actions by 30%, improving efficiency and usability of web applications.
+    Bolt.Eu • Tallinn, Estonia • 06/2020 - 09/2024
     Full Stack Engineer at Courier Engagement team, Food Delivery Vertical
-    Delivered multiple medium- to large-scale features for web applications that boosted engagement by 10% and retention by 5% among 300K food delivery couriers, collaborating with cross-functional teams.
-    Engineered and maintained numerous Node.js microservices on AWS (Kubernetes), multiple React.js web apps (including a micro frontend), and a React Native mobile app, adhering to best practices for building distributed systems and clean code principles.
-    Spearheaded the introduction of end-to-end tests for the courier mobile app using Detox and contributed to automated backend test harnesses with Jest, improving test coverage and release confidence for critical web services.
+    Join the Courier team as a full stack developer to support existing features and build new features for React Native courier mobile app, micro-frontend module in React admin panel and a dozen of Node.js microservices written with TypeScript related to the team's scope. Worked in cross-functional team context on cross-team company wide initiatives.
+    - Delivered multiple medium- to large-scale features for web applications that boosted engagement by 10% and retention by 5% among 300K food delivery couriers, collaborating with cross-functional teams.
+    - Engineered and maintained numerous Node.js microservices on AWS (Kubernetes), multiple React.js web apps (including a micro frontend), and a React Native mobile app, adhering to best practices for building distributed systems and clean code principles.
+    - Spearheaded the introduction of end-to-end tests for the courier mobile app using Detox and contributed to automated backend test harnesses with Jest, improving test coverage and release confidence for critical web services.
     DAXX • Kyiv, Ukraine • Full-time • 01/2021 - 05/2021
     JavaSсript (Vue.js) Developer at WordProof.com
-    Developed 6 custom admin panel pages in Vue.js based on Figma designs, delivering pixel-perfect UI for internal web applications and improving usability.
-    Built a reusable UI kit of Web Components with Stencil.js, enabling consistent design and faster development across multiple company projects.
-    Engineered a framework-agnostic Web Component using Stencil.js to provide a blockchain-based timestamping and verification solution, embeddable in customer websites.
+    Reported to CTO as a lead frontend developer to build reusable cross-platform UI kit used by the end customers and internal team, as well as to support and build new features for Vue.js admin panel.
+    - Developed a bunch of admin panel pages in Vue.js based on Figma designs, delivering pixel-perfect UI for internal web applications and improving usability.
+    - Built a reusable UI kit of Web Components with Stencil.js, enabling consistent design and faster development across multiple company projects.
+    - Engineered a framework-agnostic Web Component using Stencil.js to provide a blockchain-based timestamping and verification solution, embeddable in customer websites.
     EDUCATION
     Bachelor's Degree in Computer Science
     National Technical University Of Ukraine "KPI" • Kyiv, Ukraine • 10/2020 - 09/2022

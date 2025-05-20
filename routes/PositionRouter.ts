@@ -221,11 +221,7 @@ positionRouter.post(
         return;
       }
 
-      const documents = await createDocuments(
-        position.company,
-        resume,
-        userInfo
-      );
+      const documents = await createDocuments(position, resume, userInfo);
 
       await PositionTable.update(position.id, {
         resumeUrl: documents.resumeUrl,

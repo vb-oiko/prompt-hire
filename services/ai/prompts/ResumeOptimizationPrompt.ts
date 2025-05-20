@@ -22,11 +22,11 @@ export const ResumeOptimizationPrompt: Prompt<
         </output-schema>
     </data>
     <instructions>
-        I want to tailor my resume to improve my chances of getting past an Applicant Tracking System (ATS). Please help me align my resume with this job description by:
-        - Identifying key responsibilities, skills, and phrases from the job description.
-        - Rewriting or adjusting my resume content to incorporate those keywords and phrases naturally, especially in bullet points and skill summaries.
-        - Rewriting the bullet points from the Experience section to make them more impactful, concise, and results-oriented. Use active verbs and quantify achievements where possible.
-        - Adding a new section called "Additional Skills" that includes skills required by the job description that are not listed in the experience, education, or volunteering sections.
+        I want to tailor my resume to improve my chances of getting past an Applicant Tracking System (ATS). Please help me align my resume with this job description by following these steps:
+        - Identify key responsibilities, skills, and phrases from the job description.
+        - Rewrite or adjust my resume content to incorporate those keywords and phrases naturally, especially in bullet points and skill summaries.
+        - Each experience item should folow STAR method: it should include overview (a couple of setntences) to serve as "situation" and "task", and bullet points to serve as "action" and "result". Bullet points should be concise and results-oriented. Use active verbs and quantify achievements where possible.
+        - Add a new section called "Additional Skills" that includes skills required by the job description that are not listed in the experience, education, or volunteering sections.
         Return only the optimized resume as string field defined by the output-schema.
         Return ONLY the raw JSON object without any markdown formatting, code blocks, or additional text.
         Do not include \`\`\`json, \`\`\`, or any other formatting characters.

@@ -1,6 +1,5 @@
 import { docs_v1, drive_v3, google } from "googleapis";
 import Auth from "google-auth-library";
-import { Resume } from "./ai/prompts/ResumeOptimizationPrompt";
 
 import {
   GOOGLE_CLIENT_EMAIL,
@@ -11,6 +10,8 @@ import {
 } from "../const";
 import { flattenObject } from "./utils/flattenObject";
 import { UserInfo } from "../tables/UserInfoTable";
+import { Resume } from "./ai/schemas/ResumeSchema";
+import { Position } from "../tables/PositionTable";
 
 let auth: Auth.JWT;
 let drive: drive_v3.Drive;
@@ -174,19 +175,20 @@ const getDocumentUrl = async (documentId: string) => {
 };
 
 export const createDocuments = async (
-  company: string,
+  position: Position,
   resume: Resume,
   userInfo: UserInfo
 ) => {
   console.log("Creating documents started");
 
-  const folderId = await createCompanySubFolder(company);
+  const folderId = await createCompanySubFolder(position.company);
 
   const docParams = flattenObject(resume);
 
   const resumeId = await createResume(folderId, {
     ...docParams,
     phone: userInfo.phone,
+    title: position.title || "",
   });
 
   // const coverLetterId = await createCoverLetter(folderId, {
