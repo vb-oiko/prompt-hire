@@ -1,0 +1,74 @@
+{
+  "name": "Vasyl Boyko",
+  "email": "vboiko0@gmail.com",
+  "github": "vb-oiko",
+  "linkedin": "linkedin.com/in/vasyl-boyko",
+  "summary": "Experienced Full Stack Engineer with expertise in JavaScript, Node.js, and React.js, skilled in developing scalable web applications and keen on enhancing software security and quality frameworks.",
+  "experience": [
+    {
+      "company": "VIV Technologies",
+      "title": "Full Stack Developer",
+      "period": "09/2024 - 05/2025",
+      "bullets": [
+        "Led implementation of a critical data import project to reduce client onboarding time.",
+        "Migrated legacy AngularJS components to React, improving performance and user experience.",
+        "Enhanced UI/UX to streamline workflows, reducing user actions by 30%."
+      ]
+    },
+    {
+      "company": "Bolt.Eu",
+      "title": "Full Stack Engineer, Courier Engagement Team",
+      "period": "06/2020 - 09/2024",
+      "bullets": [
+        "Developed features to boost engagement and retention among 300K couriers.",
+        "Engineered microservices on AWS, and maintained React.js web apps.",
+        "Introduced end-to-end tests for mobile apps, enhancing test coverage and release confidence."
+      ]
+    },
+    {
+      "company": "DAXX",
+      "title": "JavaScript (Vue.js) Developer",
+      "period": "01/2021 - 05/2021",
+      "bullets": [
+        "Developed admin panel pages in Vue.js, improving internal web applications.",
+        "Built a reusable UI kit with Stencil.js, enabling consistent design across projects.",
+        "Engineered a framework-agnostic Web Component for blockchain-based solutions."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "National Technical University Of Ukraine \"KPI\"",
+      "degree": "Bachelor's Degree",
+      "period": "10/2020 - 09/2022",
+      "fieldOfStudy": "Systems And Methods Of Artificial Intelligence"
+    }
+  ],
+  "additionalSkills": [
+    "Software security",
+    "Static and dynamic analysis",
+    "Software supply chain security",
+    "Machine learning for code understanding",
+    "CI/CD systems integration",
+    "Distributed systems",
+    "Cloud infrastructure (AWS)"
+  ],
+  "volunteering": [
+    {
+      "organization": "Opir.org",
+      "role": "Open Source Developer",
+      "period": "02/2020 - 03/2022",
+      "bullets": [
+        "Implemented UI features with state management, routing, and live map rendering."
+      ]
+    },
+    {
+      "organization": "hospitalrun-ua",
+      "role": "Open Source Developer",
+      "period": "07/2020 - 08/2020",
+      "bullets": [
+        "Implemented front end features with React.js for real-time tracking solutions."
+      ]
+    }
+  ]
+}

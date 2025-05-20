@@ -3,6 +3,7 @@ export interface UserInfo {
   name: string;
   email: string;
   location: string;
+  phone: string;
   githubProfile: string;
   linkedinProfile: string;
   resume: string;
@@ -16,6 +17,7 @@ export const getUserInfo = async (id: number): Promise<UserInfo> => {
       id,
       name: "Vasyl Boyko",
       location: "Toronto, ON, Canada",
+      phone: process.env.USER_PHONE || "",
       email: "vboiko0@gmail.com",
       githubProfile: "https://github.com/vb-oiko",
       linkedinProfile: "https://www.linkedin.com/in/vasyl-boyko/",

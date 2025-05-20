@@ -10,12 +10,11 @@ import {
   GOOGLE_RESUME_TEMPLATE_ID,
 } from "../const";
 import { flattenObject } from "./utils/flattenObject";
+import { UserInfo } from "../tables/UserInfoTable";
 
 let auth: Auth.JWT;
 let drive: drive_v3.Drive;
 let docs: docs_v1.Docs;
-
-console.dir({ GOOGLE_PRIVATE_KEY }, { depth: null });
 
 function getAuthInstance() {
   if (!auth) {
@@ -174,14 +173,21 @@ const getDocumentUrl = async (documentId: string) => {
   return webViewLink;
 };
 
-export const createDocuments = async (company: string, resume: Resume) => {
+export const createDocuments = async (
+  company: string,
+  resume: Resume,
+  userInfo: UserInfo
+) => {
   console.log("Creating documents started");
 
   const folderId = await createCompanySubFolder(company);
 
   const docParams = flattenObject(resume);
 
-  const resumeId = await createResume(folderId, docParams);
+  const resumeId = await createResume(folderId, {
+    ...docParams,
+    phone: userInfo.phone,
+  });
 
   // const coverLetterId = await createCoverLetter(folderId, {
   //   name,

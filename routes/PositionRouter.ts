@@ -199,10 +199,20 @@ positionRouter.post(
       }
 
       const resume = JSON.parse(position.optimizedResume);
-      console.dir(resume, { depth: null });
       ResumeSchema.parse(resume);
 
-      const documents = await createDocuments(position.company, resume);
+      const userInfo = await UserInfoTable.getUserInfo(position.userId);
+
+      if (!userInfo) {
+        res.status(404).send("User not found");
+        return;
+      }
+
+      const documents = await createDocuments(
+        position.company,
+        resume,
+        userInfo
+      );
 
       await PositionTable.update(position.id, {
         resumeUrl: documents.resumeUrl,

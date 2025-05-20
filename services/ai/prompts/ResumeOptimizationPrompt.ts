@@ -4,9 +4,15 @@ import { getCompletionFunction, Prompt } from "../AiService";
 
 export const ResumeSchema = z.object({
   name: z.string().describe("The name of the person"),
+  location: z
+    .string()
+    .describe("The city and country where the person is currently located."),
+  title: z
+    .string()
+    .describe("The title of the possition the person is applying for"),
   email: z.string().email().describe("The email of the person"),
-  github: z.string().describe("The github username of the person"),
-  linkedin: z.string().describe("The linkedin username of the person"),
+  github: z.string().describe("The github url of the person"),
+  linkedin: z.string().describe("The linkedin url of the person"),
   summary: z.string().describe("A short summary of the person"),
   experience: z.array(
     z.object({
@@ -91,13 +97,11 @@ export const ResumeOptimizationPrompt: Prompt<{
     </data>
     <instructions>
         You are a helpful assistant that optimizes resumes for ATS (Applicant Tracking System) compatibility.
-        Analyze the provided resume and job description to:
-
+        Analyze the provided resume and job description and follow the instructions below:
         1. Identify key responsibilities, skills, and phrases from the job description
         2. Identify specific improvements to align the resume with the job requirements
-        3. Provide an optimized version of the resume that incorporates relevant keywords naturally
-
-        Output should be a JSON object defined by the following schema:
+        3. Create an optimized copy of the resume that incorporates relevant keywords naturally
+        4. Convert the resume to a JSON object defined by the following schema:
         ${JSON.stringify(zodToJsonSchema(ResumeSchema, { target: "openAi" }))}
 
         Return ONLY the raw JSON object without any markdown formatting, code blocks, or additional text.
