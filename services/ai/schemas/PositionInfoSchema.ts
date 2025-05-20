@@ -6,6 +6,9 @@ const PositionInfoSchema = z.object({
   company: z.string().nullable().describe("The company of the position"),
   location: z.string().nullable().describe("The location of the position"),
   salary: z.string().nullable().describe("The salary of the position"),
+  skills: z.array(z.string()).nullable().describe(
+    "hard and soft skills required for this position" // ordered from most to least important
+  ),
 });
 
 export type PositionInfo = z.infer<typeof PositionInfoSchema>;

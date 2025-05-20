@@ -16,6 +16,34 @@ export const POSITION_STATUSES = [
 
 export type PositionStatus = (typeof POSITION_STATUSES)[number];
 
+export const CREATE_POSITIONS_TABLE_STATEMENT = `
+      CREATE TABLE IF NOT EXISTS positions (
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        description TEXT NOT NULL,
+        url TEXT NOT NULL,
+        company TEXT,
+        location TEXT,
+        salary TEXT,
+        skills TEXT,
+        tags TEXT,
+        status TEXT NOT NULL CHECK(status IN (${POSITION_STATUSES.map((status) => `'${status}'`).join(",")})) DEFAULT ${POSITION_STATUS.NEW},
+        userId INTEGER NOT NULL DEFAULT 0,
+        optimizedResumeText TEXT,
+        optimizedResumeJson TEXT,
+        resumeUrl TEXT,
+        coverLetterUrl TEXT,
+        createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+      
+      -- Create indexes for common queries
+      -- CREATE INDEX IF NOT EXISTS idx_positions_userId ON positions(userId);
+      CREATE INDEX IF NOT EXISTS idx_positions_status ON positions(status);
+      ---CREATE INDEX IF NOT EXISTS idx_positions_company ON positions(company);
+      CREATE INDEX IF NOT EXISTS idx_positions_created ON positions(createdAt);
+    `;
+
 // Define TypeScript interfaces for type safety
 export interface Position {
   id: number;
@@ -25,10 +53,12 @@ export interface Position {
   company: string;
   location?: string;
   salary?: string;
+  skills?: string;
   tags?: string;
   status: PositionStatus;
   userId: number;
-  optimizedResume?: string;
+  optimizedResumeText?: string;
+  optimizedResumeJson?: string;
   resumeUrl?: string;
   coverLetterUrl?: string;
   createdAt: string;
@@ -36,25 +66,10 @@ export interface Position {
 }
 
 async function create(position: Position): Promise<void> {
-  await db.run(
-    "INSERT INTO positions (title, description, url, company, location, salary, tags, status, userId, optimizedResume, resumeUrl, coverLetterUrl, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [
-      position.title,
-      position.description,
-      position.url,
-      position.company,
-      position.location,
-      position.salary,
-      position.tags,
-      position.status,
-      position.userId,
-      position.optimizedResume,
-      position.resumeUrl,
-      position.coverLetterUrl,
-      position.createdAt,
-      position.updatedAt,
-    ]
-  );
+  await db.run("INSERT INTO positions ( description, url) VALUES (?, ?)", [
+    position.description,
+    position.url,
+  ]);
 }
 
 async function list(): Promise<Position[]> {

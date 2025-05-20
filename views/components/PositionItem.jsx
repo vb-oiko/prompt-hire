@@ -39,7 +39,7 @@ const PositionItem = ({ position }) => {
             <ActionButton
               action={`/positions/${position.id}/create-documents`}
               label="Create Documents"
-              disabled={Boolean(position.optimizedResume)}
+              disabled={Boolean(position.optimizedResumeJson)}
             />
             <ActionButton
               action={`/positions/${position.id}`}
@@ -70,7 +70,7 @@ const PositionItem = ({ position }) => {
               <strong>Location:</strong> {position.location}
             </li>
             <li>
-              <strong>Salary:</strong> {position.salary}
+              <strong>Salary:</strong> {position.salary || "Not specified"}
             </li>
             {position.resumeUrl && (
               <li>
@@ -84,12 +84,23 @@ const PositionItem = ({ position }) => {
               </li>
             )}
             <li>
-              <strong>Description:</strong> {position.description}
+              <strong>Skills:</strong> {position.skills}
             </li>
             <li>
-              <strong>Optimized Resume:</strong>
-              <pre>{position.optimizedResume}</pre>
+              <strong>Description:</strong> {position.description}
             </li>
+            {position.optimizedResumeText && (
+              <li>
+                <strong>Optimized Resume Text:</strong>
+                <pre>{position.optimizedResumeText}</pre>
+              </li>
+            )}
+            {position.optimizedResumeJson && (
+              <li>
+                <strong>Optimized Resume JSON:</strong>
+                <pre>{position.optimizedResumeJson}</pre>
+              </li>
+            )}
           </ul>
         </article>
       </div>

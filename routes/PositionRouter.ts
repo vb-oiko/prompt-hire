@@ -2,7 +2,6 @@ import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
 import PositionTable, { Position } from "../tables/PositionTable.ts";
 import { POSITION_STATUS } from "../tables/PositionTable.ts";
-import { extractPositionInfo } from "../services/ai/prompts/ExtractPositionInfoPrompt.ts";
 import { optimizeResume } from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
 import UserInfoTable from "../tables/UserInfoTable.ts";
 import { createDocuments } from "../services/GDocService.ts";
@@ -10,6 +9,7 @@ import {
   parseResume,
   ResumeSchema,
 } from "../services/ai/schemas/ResumeSchema.ts";
+import { parsePositionInfo } from "../services/ai/schemas/PositionInfoSchema.ts";
 interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -48,9 +48,10 @@ positionRouter.post(
     next: NextFunction
   ) {
     try {
-      const positionInfo = await extractPositionInfo({
-        description: req.body.description,
-      });
+      const { title, company, location, salary, skills } =
+        await parsePositionInfo({
+          text: req.body.description,
+        });
 
       const position: Position = {
         ...req.body,
@@ -58,7 +59,11 @@ positionRouter.post(
         userId: req.user?.id || 1, // TODO: Replace with actual user ID from session
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        ...positionInfo,
+        title,
+        company,
+        location,
+        salary,
+        skills: skills?.join(","),
       };
 
       await PositionTable.create(position);
@@ -130,8 +135,8 @@ positionRouter.post(
         return;
       }
 
-      const positionInfo = await extractPositionInfo({
-        description: position.description,
+      const positionInfo = await parsePositionInfo({
+        text: position.description,
       });
 
       await PositionTable.update(position.id, {
@@ -139,6 +144,7 @@ positionRouter.post(
         company: positionInfo.company || undefined,
         location: positionInfo.location || undefined,
         salary: positionInfo.salary || undefined,
+        skills: positionInfo.skills?.join(",") || undefined,
       });
 
       res.redirect(`/positions/${req.params.id}`);
@@ -172,10 +178,14 @@ positionRouter.post(
         jobDescription: position.description,
       });
 
+      await PositionTable.update(position.id, {
+        optimizedResumeText: optimizedResume,
+      });
+
       const resumeJson = await parseResume({ text: optimizedResume });
 
       await PositionTable.update(position.id, {
-        optimizedResume: JSON.stringify(resumeJson, null, 2),
+        optimizedResumeJson: JSON.stringify(resumeJson, null, 2),
       });
 
       res.redirect(`/positions`);
@@ -196,12 +206,12 @@ positionRouter.post(
         res.status(404).send("Position not found");
         return;
       }
-      if (!position.optimizedResume) {
+      if (!position.optimizedResumeJson) {
         res.status(400).send("Resume is not optimized");
         return;
       }
 
-      const resume = JSON.parse(position.optimizedResume);
+      const resume = JSON.parse(position.optimizedResumeJson);
       ResumeSchema.parse(resume);
 
       const userInfo = await UserInfoTable.getUserInfo(position.userId);

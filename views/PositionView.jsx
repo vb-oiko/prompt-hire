@@ -72,6 +72,12 @@ const PositionView = ({ position = {}, mode = "edit" }) => {
                 label="Salary"
                 defaultValue={position.salary || ""}
               />
+
+              <InputField
+                name="skills"
+                label="Skills"
+                defaultValue={position.skills || ""}
+              />
             </>
           )}
 

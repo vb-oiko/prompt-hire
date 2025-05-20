@@ -23,6 +23,11 @@ export const ResumeSchema = z.object({
         .describe(
           "The month and year when the candidate began and finished the job."
         ),
+      overview: z
+        .string()
+        .describe(
+          "A short overview of the person's job. It should be a single sentence that captures the essence of the job."
+        ),
       bullets: z
         .array(z.string())
         .describe(

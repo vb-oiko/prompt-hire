@@ -1,10 +1,6 @@
 import sqlite3 from "sqlite3";
 import { DB_FILE_PATH } from "../const.ts";
-import {
-  POSITION_STATUSES,
-  POSITION_STATUS,
-  Position,
-} from "../tables/PositionTable.ts";
+import { CREATE_POSITIONS_TABLE_STATEMENT } from "../tables/PositionTable.ts";
 
 let dbInstance: sqlite3.Database | null = null;
 
@@ -20,41 +16,7 @@ function initDb(db: sqlite3.Database): void {
   db.serialize(() => {
     // Enable foreign key support
     db.run("PRAGMA foreign_keys = ON");
-
-    db.run(`
-      CREATE TABLE IF NOT EXISTS positions (
-        id INTEGER PRIMARY KEY,
-        title TEXT,
-        description TEXT NOT NULL,
-        url TEXT NOT NULL,
-        company TEXT,
-        location TEXT,
-        salary TEXT,
-        tags TEXT,
-        status TEXT NOT NULL CHECK(status IN (${POSITION_STATUSES.map((status) => `'${status}'`).join(",")})) DEFAULT ${POSITION_STATUS.NEW},
-        userId INTEGER NOT NULL,
-        optimizedResume TEXT,
-        resumeUrl TEXT,
-        coverLetterUrl TEXT,
-        createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );
-      
-      -- Create indexes for common queries
-      CREATE INDEX IF NOT EXISTS idx_positions_userId ON positions(userId);
-      CREATE INDEX IF NOT EXISTS idx_positions_status ON positions(status);
-      CREATE INDEX IF NOT EXISTS idx_positions_company ON positions(company);
-      CREATE INDEX IF NOT EXISTS idx_positions_created ON positions(createdAt);
-    `);
-
-    // Create a trigger to automatically update the updatedAt timestamp
-    db.run(`
-      CREATE TRIGGER IF NOT EXISTS update_positions_timestamp 
-      AFTER UPDATE ON positions
-      BEGIN
-        UPDATE positions SET updatedAt = CURRENT_TIMESTAMP WHERE id = NEW.id;
-      END;
-    `);
+    db.run(CREATE_POSITIONS_TABLE_STATEMENT);
   });
 }
 
