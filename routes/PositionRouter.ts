@@ -3,12 +3,13 @@ import type { Request, Response, NextFunction } from "express";
 import PositionTable, { Position } from "../tables/PositionTable.ts";
 import { POSITION_STATUS } from "../tables/PositionTable.ts";
 import { extractPositionInfo } from "../services/ai/prompts/ExtractPositionInfoPrompt.ts";
-import {
-  optimizeResume,
-  ResumeSchema,
-} from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
+import { optimizeResume } from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
 import UserInfoTable from "../tables/UserInfoTable.ts";
 import { createDocuments } from "../services/GDocService.ts";
+import {
+  parseResume,
+  ResumeSchema,
+} from "../services/ai/schemas/ResumeSchema.ts";
 interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -166,13 +167,15 @@ positionRouter.post(
         return;
       }
 
-      const resume = await optimizeResume({
+      const { optimizedResume } = await optimizeResume({
         resume: userInfo.resume,
         jobDescription: position.description,
       });
 
+      const resumeJson = await parseResume({ text: optimizedResume });
+
       await PositionTable.update(position.id, {
-        optimizedResume: JSON.stringify(resume, null, 2),
+        optimizedResume: JSON.stringify(resumeJson, null, 2),
       });
 
       res.redirect(`/positions`);

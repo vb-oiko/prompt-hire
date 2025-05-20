@@ -21,13 +21,13 @@ function getAiClient() {
 }
 
 export function getCompletionFunction<Input, Output>(
-  prompt: Prompt<Input>,
+  prompt: Prompt<Input, z.ZodSchema<Output>>,
   outputSchema: z.ZodSchema<Output>
 ) {
   return async (input: Input) => {
     const response = await getAiClient().responses.create({
       model: MODEL,
-      input: prompt(input),
+      input: prompt(input, outputSchema),
     });
 
     const outputText = response.output_text;
@@ -47,4 +47,7 @@ export function getCompletionFunction<Input, Output>(
   };
 }
 
-export type Prompt<Input> = (input: Input) => string;
+export type Prompt<Input, Schema extends z.ZodSchema> = (
+  input: Input,
+  schema: Schema
+) => string;
