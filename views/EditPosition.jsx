@@ -79,6 +79,13 @@ const EditPosition = ({ position = {}, mode = "edit" }) => {
                 label="Skills"
                 defaultValue={position.skills || ""}
               />
+
+              <InputField
+                name="additionalJoiningReasons"
+                label="Additional Joining Reasons"
+                type="textarea"
+                defaultValue={position.additionalJoiningReasons || ""}
+              />
             </>
           )}
 

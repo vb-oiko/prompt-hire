@@ -194,7 +194,7 @@ positionRouter.post(
         optimizedResumeJson: JSON.stringify(resumeJson, null, 2),
       });
 
-      res.redirect(`/positions`);
+      res.redirect(`/positions/${req.params.id}`);
     } catch (error) {
       next(error);
     }
