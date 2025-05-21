@@ -71,11 +71,17 @@ export interface Position {
   updatedAt: string;
 }
 
-async function create(position: Position): Promise<void> {
-  await db.run("INSERT INTO positions ( description, url) VALUES (?, ?)", [
-    position.description,
-    position.url,
-  ]);
+async function create(position: Omit<Position, "id">): Promise<number> {
+  const result = await db.run(
+    "INSERT INTO positions ( description, url) VALUES (?, ?)",
+    [position.description, position.url]
+  );
+
+  if (result.lastID) {
+    return result.lastID;
+  }
+
+  throw new Error("Failed to create position");
 }
 
 async function list(): Promise<Position[]> {

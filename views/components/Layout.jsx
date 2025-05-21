@@ -30,7 +30,9 @@ const Layout = ({ title = DEFAULT_TITLE, children }) => {
             </ul>
           </nav>
         </header>
-        <main className="container">{children}</main>
+        <main className="container" style={{ paddingBlockStart: 0 }}>
+          {children}
+        </main>
       </body>
     </html>
   );

@@ -15,7 +15,7 @@ import {
   parseCoverLetter,
   CoverLetterSchema,
 } from "../services/ai/schemas/CoverLetterSchema.ts";
-
+import PositionController from "../controllers/PositionController.ts";
 interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -30,7 +30,7 @@ positionRouter.get(
   async function (req: Request, res: Response, next: NextFunction) {
     try {
       const positions = await PositionTable.list();
-      res.render("PositionsView", { positions });
+      res.render("ListPositions", { positions });
     } catch (error) {
       next(error);
     }
@@ -54,26 +54,11 @@ positionRouter.post(
     next: NextFunction
   ) {
     try {
-      const { title, company, location, salary, skills } =
-        await parsePositionInfo({
-          text: req.body.description,
-        });
-
-      const position: Position = {
-        ...req.body,
-        status: POSITION_STATUS.NEW,
-        userId: req.user?.id || 1, // TODO: Replace with actual user ID from session
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        title,
-        company,
-        location,
-        salary,
-        skills: skills?.join(","),
-      };
-
-      await PositionTable.create(position);
-      res.redirect("/positions");
+      const id = await PositionController.create({
+        description: req.body.description,
+        url: req.body.url,
+      });
+      res.redirect(`/positions/${id}`);
     } catch (error) {
       next(error);
     }
@@ -92,7 +77,7 @@ positionRouter.get(
         return;
       }
 
-      res.render("PositionView", { position, mode: "edit" });
+      res.render("ViewPosition", { position });
     } catch (error) {
       next(error);
     }
@@ -214,6 +199,7 @@ positionRouter.post(
       }
       if (!position.optimizedResumeJson) {
         res.status(400).send("Resume is not optimized");
+        ``;
         return;
       }
       if (!position.coverLetterJson) {

@@ -47,14 +47,17 @@ async function get<T>(
   });
 }
 
-async function run(query: string, params: any[] = []): Promise<void> {
+async function run(
+  query: string,
+  params: any[] = []
+): Promise<sqlite3.RunResult> {
   return new Promise((resolve, reject) => {
-    getConnection().run(query, params, (err) => {
+    getConnection().run(query, params, function (err) {
       if (err) {
         reject(err);
         return;
       }
-      resolve();
+      resolve(this);
     });
   });
 }
