@@ -1,14 +1,21 @@
 const React = require("react");
-const Layout = require("./components/Layout");
-const InputField = require("./components/InputField");
-const ActionButton = require("./components/ActionButton");
+const Layout = require("./components/Layout.jsx");
+const InputField = require("./components/InputField.jsx");
+const ActionButton = require("./components/ActionButton.jsx");
+
+/**
+ * @typedef {{
+ *   position: import("../tables/PositionTable.ts").Position;
+ *   mode: "edit" | "create";
+ * }} EditPositionProps
+ */
 
 /**
  * Position detail view component
- * @param {import("./types.ts").PositionView} props
+ * @param {EditPositionProps} props
  * @returns {JSX.Element}
  */
-const PositionView = ({ position = {}, mode = "edit" }) => {
+const EditPosition = ({ position = {}, mode = "edit" }) => {
   const isCreateMode = mode === "create";
   const title = isCreateMode
     ? "Create Position"
@@ -17,14 +24,8 @@ const PositionView = ({ position = {}, mode = "edit" }) => {
   return (
     <Layout title={`${title} - PromptHire`}>
       <article>
-        <header className="grid">
-          <h1>{title}</h1>
-          <div style={{ marginLeft: "auto" }}>
-            <ActionButton
-              action={`/positions/${position.id}/parse`}
-              label="Parse"
-            />
-          </div>
+        <header>
+          <h3>{title}</h3>
         </header>
 
         <form
@@ -81,31 +82,18 @@ const PositionView = ({ position = {}, mode = "edit" }) => {
             </>
           )}
 
-          {/* <InputField
-            name="tags"
-            label="Tags"
-            placeholder="Comma-separated tags"
-            defaultValue={position.tags || ""}
-          /> */}
-
           <footer role="group" style={{ width: "auto" }}>
             <button type="submit">
               {isCreateMode ? "Create Position" : "Save Changes"}
             </button>
 
-            <a href="/positions" role="button" className="secondary">
+            <a
+              href={isCreateMode ? "/positions" : `/positions/${position.id}`}
+              role="button"
+              className="secondary"
+            >
               Cancel
             </a>
-
-            {!isCreateMode && (
-              <a
-                href={`/positions/${position.id}/delete`}
-                role="button"
-                className="contrast"
-              >
-                Delete
-              </a>
-            )}
           </footer>
         </form>
       </article>
@@ -113,4 +101,4 @@ const PositionView = ({ position = {}, mode = "edit" }) => {
   );
 };
 
-module.exports = PositionView;
+module.exports = EditPosition;

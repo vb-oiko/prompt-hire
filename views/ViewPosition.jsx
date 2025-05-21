@@ -21,15 +21,19 @@ const ViewPosition = ({ position = {} }) => {
           />
           <ActionButton
             action={`/positions/${position.id}/optimize`}
-            label="Optimize Resume"
+            label="Resume ✨"
+          />
+          <ActionButton
+            action={`/positions/${position.id}/create-cover-letter`}
+            label="Cover Letter ✨"
           />
           <ActionButton
             action={`/positions/${position.id}/create-documents`}
-            label="Create Documents"
+            label="PDFs ✨"
             disabled={Boolean(position.optimizedResumeJson)}
           />
           <ActionButton
-            action={`/positions/${position.id}`}
+            action={`/positions/${position.id}/edit`}
             method="GET"
             label="Edit"
             className="secondary"

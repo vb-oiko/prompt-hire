@@ -41,7 +41,22 @@ positionRouter.get(
 positionRouter.get(
   "/new",
   async function (req: Request, res: Response, _next: NextFunction) {
-    res.render("PositionView", { mode: "create" });
+    res.render("EditPosition", { mode: "create" });
+  }
+);
+
+// Show edit position form
+positionRouter.get(
+  "/:id/edit",
+  async function (req: Request, res: Response, _next: NextFunction) {
+    const position = await PositionTable.getById(Number(req.params.id));
+
+    if (!position) {
+      res.status(404).send("Position not found");
+      return;
+    }
+
+    res.render("EditPosition", { position, mode: "edit" });
   }
 );
 
@@ -92,7 +107,7 @@ positionRouter.post(
       const position = req.body;
 
       await PositionTable.update(Number(req.params.id), position);
-      res.redirect(`/positions`);
+      res.redirect(`/positions/${req.params.id}`);
     } catch (error) {
       next(error);
     }
@@ -240,7 +255,7 @@ positionRouter.post(
 );
 
 // Create cover letter
-positionRouter.get(
+positionRouter.post(
   "/:id/create-cover-letter",
   async function (req: Request, res: Response, next: NextFunction) {
     try {

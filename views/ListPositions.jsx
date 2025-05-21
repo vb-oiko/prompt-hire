@@ -1,6 +1,5 @@
 const React = require("react");
 const Layout = require("./components/Layout.jsx");
-const PositionItem = require("./components/PositionItem.jsx");
 
 /**
  * @typedef {{
