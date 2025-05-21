@@ -101,6 +101,18 @@ const PositionItem = ({ position }) => {
                 <pre>{position.optimizedResumeJson}</pre>
               </li>
             )}
+            {position.coverLetterText && (
+              <li>
+                <strong>Cover Letter Text:</strong>
+                <pre>{position.coverLetterText}</pre>
+              </li>
+            )}
+            {position.coverLetterJson && (
+              <li>
+                <strong>Cover Letter JSON:</strong>
+                <pre>{position.coverLetterJson}</pre>
+              </li>
+            )}
           </ul>
         </article>
       </div>

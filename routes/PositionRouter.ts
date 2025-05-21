@@ -10,6 +10,12 @@ import {
   ResumeSchema,
 } from "../services/ai/schemas/ResumeSchema.ts";
 import { parsePositionInfo } from "../services/ai/schemas/PositionInfoSchema.ts";
+import { generateCoverLetter } from "../services/ai/prompts/CoverLetterPrompt.ts";
+import {
+  parseCoverLetter,
+  CoverLetterSchema,
+} from "../services/ai/schemas/CoverLetterSchema.ts";
+
 interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -210,9 +216,16 @@ positionRouter.post(
         res.status(400).send("Resume is not optimized");
         return;
       }
+      if (!position.coverLetterJson) {
+        res.status(400).send("Cover letter is not optimized");
+        return;
+      }
 
       const resume = JSON.parse(position.optimizedResumeJson);
       ResumeSchema.parse(resume);
+
+      const coverLetter = JSON.parse(position.coverLetterJson);
+      CoverLetterSchema.parse(coverLetter);
 
       const userInfo = await UserInfoTable.getUserInfo(position.userId);
 
@@ -221,11 +234,48 @@ positionRouter.post(
         return;
       }
 
-      const documents = await createDocuments(position, resume, userInfo);
+      const documents = await createDocuments({
+        position,
+        resume,
+        userInfo,
+        coverLetter,
+      });
 
       await PositionTable.update(position.id, {
         resumeUrl: documents.resumeUrl,
         coverLetterUrl: documents.coverLetterUrl,
+      });
+
+      res.redirect(`/positions/${req.params.id}`);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Create cover letter
+positionRouter.get(
+  "/:id/create-cover-letter",
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const position = await PositionTable.getById(Number(req.params.id));
+
+      if (!position || !position.optimizedResumeText) {
+        res.status(404).send("Position or resume not found");
+        return;
+      }
+
+      const { coverLetter } = await generateCoverLetter({
+        resume: position.optimizedResumeText,
+        jobDescription: position.description,
+        additionalJoiningReasons: position.additionalJoiningReasons || "",
+      });
+
+      const coverLetterJson = await parseCoverLetter({ text: coverLetter });
+
+      await PositionTable.update(position.id, {
+        coverLetterText: coverLetter,
+        coverLetterJson: JSON.stringify(coverLetterJson, null, 2),
       });
 
       res.redirect(`/positions/${req.params.id}`);

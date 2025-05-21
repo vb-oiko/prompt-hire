@@ -12,6 +12,7 @@ import { flattenObject } from "./utils/flattenObject";
 import { UserInfo } from "../tables/UserInfoTable";
 import { Resume } from "./ai/schemas/ResumeSchema";
 import { Position } from "../tables/PositionTable";
+import { CoverLetter } from "./ai/schemas/CoverLetterSchema";
 
 let auth: Auth.JWT;
 let drive: drive_v3.Drive;
@@ -151,10 +152,7 @@ const createCoverLetter = async (
     templateId: GOOGLE_COVER_LETTER_TEMPLATE_ID,
   });
 
-  await replacePlaceholders(coverLetterId, {
-    ...params,
-    date: getCurrentDate(),
-  });
+  await replacePlaceholders(coverLetterId, params);
 
   return coverLetterId;
 };
@@ -174,11 +172,17 @@ const getDocumentUrl = async (documentId: string) => {
   return webViewLink;
 };
 
-export const createDocuments = async (
-  position: Position,
-  resume: Resume,
-  userInfo: UserInfo
-) => {
+export const createDocuments = async ({
+  position,
+  resume,
+  userInfo,
+  coverLetter,
+}: {
+  position: Position;
+  resume: Resume;
+  userInfo: UserInfo;
+  coverLetter: CoverLetter;
+}) => {
   console.log("Creating documents started");
 
   const folderId = await createCompanySubFolder(position.company);
@@ -191,15 +195,19 @@ export const createDocuments = async (
     title: position.title || "",
   });
 
-  // const coverLetterId = await createCoverLetter(folderId, {
-  //   name,
-  //   coverLetterText,
-  //   title,
-  //   city,
-  // });
+  const coverLetterId = await createCoverLetter(folderId, {
+    name: userInfo.name,
+    title: position.title || "",
+    location: userInfo.location,
+    company: position.company || "",
+    phone: userInfo.phone,
+    email: userInfo.email,
+    date: getCurrentDate(),
+    ...flattenObject(coverLetter),
+  });
 
   const resumeUrl = await getDocumentUrl(resumeId);
-  const coverLetterUrl = "#"; // await getDocumentUrl(coverLetterId);
+  const coverLetterUrl = await getDocumentUrl(coverLetterId);
 
   console.log("Creating documents finished");
   return { resumeUrl, coverLetterUrl };
@@ -215,9 +223,12 @@ export interface ResumeParams extends Record<string, string> {
 
 export interface CoverLetterParams extends Record<string, string> {
   name: string;
-  coverLetterText: string;
   title: string;
-  city: string;
+  location: string;
+  company: string;
+  phone: string;
+  email: string;
+  date: string;
 }
 
 export interface CreateDocumentsParams extends ResumeParams, CoverLetterParams {

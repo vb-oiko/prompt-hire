@@ -31,8 +31,11 @@ export const CREATE_POSITIONS_TABLE_STATEMENT = `
         userId INTEGER NOT NULL DEFAULT 0,
         optimizedResumeText TEXT,
         optimizedResumeJson TEXT,
+        coverLetterText TEXT,
+        coverLetterJson TEXT,
         resumeUrl TEXT,
         coverLetterUrl TEXT,
+        additionalJoiningReasons TEXT,
         createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
@@ -59,8 +62,11 @@ export interface Position {
   userId: number;
   optimizedResumeText?: string;
   optimizedResumeJson?: string;
+  coverLetterText?: string;
+  coverLetterJson?: string;
   resumeUrl?: string;
   coverLetterUrl?: string;
+  additionalJoiningReasons?: string;
   createdAt: string;
   updatedAt: string;
 }
