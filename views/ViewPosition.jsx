@@ -43,7 +43,7 @@ const ViewPosition = ({ position = {} }) => {
         <DisplayField label="Title" value={position.title} />
         <DisplayField label="Company" value={position.company} />
         <DisplayField label="Location" value={position.location} />
-        <DisplayField label="URL" value={position.url} />
+        <DisplayUrlField label="Position Page" value={position.url} />
         <DisplayPreFormattedField
           label="Description"
           value={position.description}

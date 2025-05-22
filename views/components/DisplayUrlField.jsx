@@ -17,7 +17,7 @@ const DisplayUrlField = ({ label, value }) => {
     value && (
       <div>
         <a href={value} target="_blank" rel="noopener noreferrer">
-          {label}
+          {label}🔗
         </a>
       </div>
     )
