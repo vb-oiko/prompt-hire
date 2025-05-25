@@ -62,7 +62,7 @@ export const CoverLetterPrompt: Prompt<
         Analyze the provided resume and job description.
         Identify top 6 skills required for the job.
         For each key skill write an example how the applicant performed well in that skill judging by the provided resume.
-        Write a compelling and professional cover latter that follows the structure of the providedtemplate.
+        Write a compelling and professional cover letter that follows the structure of the provided template.
         Return only the cover letter as string field defined by the output-schema.
         Return ONLY the raw JSON object without any markdown formatting, code blocks, or additional text.
         Do not include \`\`\`json, \`\`\`, or any other formatting characters.

@@ -15,6 +15,7 @@ import {
   parseCoverLetter,
   CoverLetterSchema,
 } from "../services/ai/schemas/CoverLetterSchema.ts";
+import { parseJobSkills } from "../services/ai/prompts/JobSkillsPrompt.ts";
 
 async function CreatePosition({
   description,
@@ -39,8 +40,23 @@ async function CreatePosition({
   return id;
 }
 
+async function parsePositionSkills({ positionId }: { positionId: number }) {
+  const position = await PositionTable.getById(positionId);
+
+  if (!position) {
+    throw new Error("Position not found");
+  }
+
+  const jobSkills = await parseJobSkills({
+    jobDescription: position.description,
+  });
+
+  return jobSkills;
+}
+
 const PositionController = {
   create: CreatePosition,
+  parseSkills: parsePositionSkills,
 };
 
 export default PositionController;

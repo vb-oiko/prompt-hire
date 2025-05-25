@@ -7,14 +7,14 @@ export const TextToJsonPrompt: Prompt<{ text: string }, z.ZodSchema> = (
   schema
 ) => {
   return `
-    <data>
+    <context>
         <text>
         ${input.text}
         </text>
         <parsing-schema>
         ${JSON.stringify(zodToJsonSchema(schema, { target: "openAi" }))}
         </parsing-schema>
-    </data>
+    </context>
     <instructions>
         You are a helpful assistant that parses text into JSON objects.
         Analyze the provided text and convert it into a JSON object defined by the schema.

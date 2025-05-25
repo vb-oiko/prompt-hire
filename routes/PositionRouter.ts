@@ -2,8 +2,11 @@ import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
 import PositionTable, { Position } from "../tables/PositionTable.ts";
 import { POSITION_STATUS } from "../tables/PositionTable.ts";
-import { optimizeResume } from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
-import UserInfoTable from "../tables/UserInfoTable.ts";
+import {
+  optimizeResume,
+  optimizeSummary,
+} from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
+import UserInfoTable, { STRUCTURED_RESUME } from "../tables/UserInfoTable.ts";
 import { createDocuments } from "../services/GDocService.ts";
 import {
   parseResume,
@@ -267,7 +270,7 @@ positionRouter.post(
       }
 
       const { coverLetter } = await generateCoverLetter({
-        resume: position.optimizedResumeText,
+        resume: JSON.stringify(STRUCTURED_RESUME, null, 2),
         jobDescription: position.description,
         additionalJoiningReasons: position.additionalJoiningReasons || "",
       });
@@ -280,6 +283,54 @@ positionRouter.post(
       });
 
       res.redirect(`/positions/${req.params.id}`);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Parse position skills
+positionRouter.post(
+  "/:id/parse-skills",
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const skills = await PositionController.parseSkills({
+        positionId: Number(req.params.id),
+      });
+
+      res.send(`
+        <html>
+          <body><pre>${JSON.stringify(skills, null, 2)}</pre></body>
+        </html>
+      `);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Optimize summary
+positionRouter.post(
+  "/:id/optimize-summary",
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const position = await PositionTable.getById(Number(req.params.id));
+
+      if (!position) {
+        res.status(404).send("Position not found");
+        return;
+      }
+
+      const { summary } = await optimizeSummary({
+        resumeJson: STRUCTURED_RESUME,
+        jobDescription: position.description,
+      });
+
+      res.send(`
+        <html>
+          <body><p>${summary}</p></body>
+        </html>
+      `);
     } catch (error) {
       next(error);
     }
