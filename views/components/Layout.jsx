@@ -11,6 +11,7 @@ const Layout = ({ title = DEFAULT_TITLE, children }) => {
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
         ></link>
+        <link rel="stylesheet" href="/css/style.css"></link>
         <title>{title}</title>
       </head>
       <body className="container">

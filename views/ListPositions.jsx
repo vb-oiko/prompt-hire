@@ -1,5 +1,6 @@
 const React = require("react");
 const Layout = require("./components/Layout.jsx");
+const { formatDate } = require("./utils/utils.ts");
 
 /**
  * @typedef {{
@@ -23,6 +24,7 @@ const ListPositions = ({ positions = [] }) => {
         <table>
           <thead>
             <tr>
+              <th>Date</th>
               <th>Title</th>
               <th>Company</th>
               <th>Location</th>
@@ -35,6 +37,7 @@ const ListPositions = ({ positions = [] }) => {
             ) : (
               positions.map((position) => (
                 <tr key={position.id}>
+                  <td className="no-wrap">{formatDate(position.createdAt)}</td>
                   <td>
                     <a href={`/positions/${position.id}`}>{position.title}</a>
                   </td>

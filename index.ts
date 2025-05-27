@@ -6,10 +6,9 @@ import logger from "morgan";
 import expressReactViews from "express-react-views";
 import { COOKIE_PARSER_SECRET } from "./const.ts";
 import IndexRouter from "./routes/IndexRouter.ts";
-import { fileURLToPath } from "url";
 import { dirname } from "path";
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename = process.argv[1];
 const __dirname = dirname(__filename);
 
 const app = express();
@@ -27,6 +26,10 @@ app.set("view engine", "jsx");
 app.engine("jsx", expressReactViews.createEngine());
 
 app.use("/", IndexRouter);
+
+app.use(function (req, res, next) {
+  res.status(404).send("Sorry, can't find that!");
+});
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
