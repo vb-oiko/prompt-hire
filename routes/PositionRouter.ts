@@ -1,23 +1,9 @@
 import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
-import PositionTable, { Position } from "../tables/PositionTable.ts";
+import PositionTable from "../tables/PositionTable.ts";
 import { POSITION_STATUS } from "../tables/PositionTable.ts";
-import {
-  optimizeResume,
-  optimizeSummary,
-} from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
-import UserInfoTable, { STRUCTURED_RESUME } from "../tables/UserInfoTable.ts";
-import { createDocuments } from "../services/GDocService.ts";
-import {
-  parseResume,
-  ResumeSchema,
-} from "../services/ai/schemas/ResumeSchema.ts";
-import { parsePositionInfo } from "../services/ai/schemas/PositionInfoSchema.ts";
-import { generateCoverLetter } from "../services/ai/prompts/CoverLetterPrompt.ts";
-import {
-  parseCoverLetter,
-  CoverLetterSchema,
-} from "../services/ai/schemas/CoverLetterSchema.ts";
+import { optimizeSummary } from "../services/ai/prompts/ResumeOptimizationPrompt.ts";
+import { STRUCTURED_RESUME } from "../tables/UserInfoTable.ts";
 import PositionController from "../controllers/PositionController.ts";
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -72,7 +58,7 @@ positionRouter.post(
     next: NextFunction
   ) {
     try {
-      const id = await PositionController.create({
+      const id = await PositionController.createPosition({
         description: req.body.description,
         url: req.body.url,
       });
@@ -144,16 +130,9 @@ positionRouter.post(
         return;
       }
 
-      const positionInfo = await parsePositionInfo({
-        text: position.description,
-      });
-
-      await PositionTable.update(position.id, {
-        title: positionInfo.title || undefined,
-        company: positionInfo.company || undefined,
-        location: positionInfo.location || undefined,
-        salary: positionInfo.salary || undefined,
-        skills: positionInfo.skills?.join(",") || undefined,
+      await PositionController.parsePositionInfo({
+        positionId: position.id,
+        positionDescription: position.description,
       });
 
       res.redirect(`/positions/${req.params.id}`);
@@ -168,33 +147,8 @@ positionRouter.post(
   "/:id/optimize",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const position = await PositionTable.getById(Number(req.params.id));
-
-      if (!position) {
-        res.status(404).send("Position not found");
-        return;
-      }
-
-      const userInfo = await UserInfoTable.getUserInfo(position.userId);
-
-      if (!userInfo) {
-        res.status(404).send("User not found");
-        return;
-      }
-
-      const { optimizedResume } = await optimizeResume({
-        resume: userInfo.resume,
-        jobDescription: position.description,
-      });
-
-      await PositionTable.update(position.id, {
-        optimizedResumeText: optimizedResume,
-      });
-
-      const resumeJson = await parseResume({ text: optimizedResume });
-
-      await PositionTable.update(position.id, {
-        optimizedResumeJson: JSON.stringify(resumeJson, null, 2),
+      await PositionController.tailorResume({
+        positionId: Number(req.params.id),
       });
 
       res.redirect(`/positions/${req.params.id}`);
@@ -209,45 +163,8 @@ positionRouter.post(
   "/:id/create-documents",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const position = await PositionTable.getById(Number(req.params.id));
-
-      if (!position) {
-        res.status(404).send("Position not found");
-        return;
-      }
-      if (!position.optimizedResumeJson) {
-        res.status(400).send("Resume is not optimized");
-        ``;
-        return;
-      }
-      if (!position.coverLetterJson) {
-        res.status(400).send("Cover letter is not optimized");
-        return;
-      }
-
-      const resume = JSON.parse(position.optimizedResumeJson);
-      ResumeSchema.parse(resume);
-
-      const coverLetter = JSON.parse(position.coverLetterJson);
-      CoverLetterSchema.parse(coverLetter);
-
-      const userInfo = await UserInfoTable.getUserInfo(position.userId);
-
-      if (!userInfo) {
-        res.status(404).send("User not found");
-        return;
-      }
-
-      const documents = await createDocuments({
-        position,
-        resume,
-        userInfo,
-        coverLetter,
-      });
-
-      await PositionTable.update(position.id, {
-        resumeUrl: documents.resumeUrl,
-        coverLetterUrl: documents.coverLetterUrl,
+      await PositionController.generateResumeAndCoverLetter({
+        positionId: Number(req.params.id),
       });
 
       res.redirect(`/positions/${req.params.id}`);
@@ -262,24 +179,8 @@ positionRouter.post(
   "/:id/create-cover-letter",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const position = await PositionTable.getById(Number(req.params.id));
-
-      if (!position || !position.optimizedResumeText) {
-        res.status(404).send("Position or resume not found");
-        return;
-      }
-
-      const { coverLetter } = await generateCoverLetter({
-        resume: JSON.stringify(STRUCTURED_RESUME, null, 2),
-        jobDescription: position.description,
-        additionalJoiningReasons: position.additionalJoiningReasons || "",
-      });
-
-      const coverLetterJson = await parseCoverLetter({ text: coverLetter });
-
-      await PositionTable.update(position.id, {
-        coverLetterText: coverLetter,
-        coverLetterJson: JSON.stringify(coverLetterJson, null, 2),
+      await PositionController.tailorCoverLetter({
+        positionId: Number(req.params.id),
       });
 
       res.redirect(`/positions/${req.params.id}`);
@@ -294,7 +195,7 @@ positionRouter.post(
   "/:id/parse-skills",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const skills = await PositionController.parseSkills({
+      const skills = await PositionController.parsePositionSkills({
         positionId: Number(req.params.id),
       });
 
@@ -337,4 +238,19 @@ positionRouter.post(
   }
 );
 
+// Start tailoring workflow
+positionRouter.post(
+  "/:id/start-tailoring-workflow",
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      PositionController.startTailoringWorkflow({
+        positionId: Number(req.params.id),
+      });
+
+      res.redirect(`/positions/${req.params.id}`);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 export default positionRouter;

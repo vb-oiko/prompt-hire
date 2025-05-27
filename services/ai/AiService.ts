@@ -56,21 +56,6 @@ export function getChatCompletionFunction<Input, Output>(
   prompt: ChatPrompt<Input, z.ZodSchema<Output>>,
   outputSchema: z.ZodSchema<Output>
 ) {
-  const functionDefinition = {
-    name: "generate_summary",
-    description: "Generates a tailored resume summary.",
-    parameters: {
-      type: "object",
-      properties: {
-        summary: {
-          type: "string",
-          description: "The tailored professional summary text.",
-        },
-      },
-      required: ["summary"],
-    },
-  };
-
   return async (input: Input) => {
     const response = await getAiClient().chat.completions.create({
       model: MODEL,

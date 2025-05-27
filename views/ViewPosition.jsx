@@ -20,6 +20,10 @@ const ViewPosition = ({ position = {} }) => {
             label="Parse Description"
           />
           <ActionButton
+            action={`/positions/${position.id}/start-tailoring-workflow`}
+            label="Tailor All ✨"
+          />
+          <ActionButton
             action={`/positions/${position.id}/optimize`}
             label="Resume ✨"
           />

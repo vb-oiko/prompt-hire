@@ -13,4 +13,6 @@ const PositionInfoSchema = z.object({
 
 export type PositionInfo = z.infer<typeof PositionInfoSchema>;
 
-export const parsePositionInfo = getParseTextToJsonFunction(PositionInfoSchema);
+const parsePositionInfo = getParseTextToJsonFunction(PositionInfoSchema);
+
+export default { parsePositionInfo };
