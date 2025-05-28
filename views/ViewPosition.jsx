@@ -1,48 +1,70 @@
 const React = require("react");
 const Layout = require("./components/Layout");
-const InputField = require("./components/InputField");
 const ActionButton = require("./components/ActionButton");
 const DisplayField = require("./components/DisplayField");
 const DisplayPreFormattedField = require("./components/DisplayPreFormattedField");
 const DisplayUrlField = require("./components/DisplayUrlField");
+const MoreActionsDropdown = require("./components/MoreActionsDropdown");
+
 /**
  * Position detail view component
  * @param {import("./types.ts").PositionView} props
  * @returns {JSX.Element}
  */
 const ViewPosition = ({ position = {} }) => {
+  const actions = [
+    {
+      label: "Parse Description",
+      action: `/positions/${position.id}/parse`,
+    },
+    {
+      label: "Tailor All ✨",
+      action: `/positions/${position.id}/start-tailoring-workflow`,
+    },
+    {
+      label: "Resume ✨",
+      action: `/positions/${position.id}/optimize`,
+    },
+    {
+      label: "Cover Letter ✨",
+      action: `/positions/${position.id}/create-cover-letter`,
+    },
+    {
+      label: "PDFs ✨",
+      action: `/positions/${position.id}/create-documents`,
+    },
+  ];
+
   return (
     <Layout title={`${position.title} - PromptHire`}>
       <article>
-        <header className="grid">
-          <ActionButton
-            action={`/positions/${position.id}/parse`}
-            label="Parse Description"
-          />
-          <ActionButton
-            action={`/positions/${position.id}/start-tailoring-workflow`}
-            label="Tailor All ✨"
-          />
-          <ActionButton
-            action={`/positions/${position.id}/optimize`}
-            label="Resume ✨"
-          />
-          <ActionButton
-            action={`/positions/${position.id}/create-cover-letter`}
-            label="Cover Letter ✨"
-          />
-          <ActionButton
-            action={`/positions/${position.id}/create-documents`}
-            label="PDFs ✨"
-            disabled={Boolean(position.optimizedResumeJson)}
-          />
+        <header style={{ display: "flex", justifyContent: "end", gap: "1rem" }}>
           <ActionButton
             action={`/positions/${position.id}/edit`}
             method="GET"
             label="Edit"
             className="secondary"
           />
+          <a
+            href={`/contacts?positionId=${position.id}`}
+            role="button"
+            style={{
+              height: "min-content",
+            }}
+          >
+            Contacts
+          </a>
+          <MoreActionsDropdown actions={actions} />
         </header>
+
+        <DisplayField label="Title" value={position.title} />
+        <DisplayField label="Company" value={position.company} />
+        <DisplayField label="Location" value={position.location} />
+        <DisplayUrlField label="Position Page" value={position.url} />
+        <DisplayPreFormattedField
+          label="Description"
+          value={position.description}
+        />
 
         <DisplayField label="Title" value={position.title} />
         <DisplayField label="Company" value={position.company} />

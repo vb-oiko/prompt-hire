@@ -1,3 +1,7 @@
 .no-wrap {
   white-space: nowrap;
 }
+
+.w-auto {
+  width: auto !important;
+}

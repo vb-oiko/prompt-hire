@@ -1,6 +1,8 @@
 import sqlite3 from "sqlite3";
 import { DB_FILE_PATH } from "../const.ts";
 import { CREATE_POSITIONS_TABLE_STATEMENT } from "../tables/PositionTable.ts";
+import { CREATE_CONTACTS_TABLE_STATEMENT } from "../tables/ContactTable.ts";
+import { CREATE_MESSAGES_TABLE_STATEMENT } from "../tables/MessageTable.ts";
 
 let dbInstance: sqlite3.Database | null = null;
 
@@ -17,6 +19,8 @@ function initDb(db: sqlite3.Database): void {
     // Enable foreign key support
     db.run("PRAGMA foreign_keys = ON");
     db.run(CREATE_POSITIONS_TABLE_STATEMENT);
+    db.run(CREATE_CONTACTS_TABLE_STATEMENT);
+    db.run(CREATE_MESSAGES_TABLE_STATEMENT);
   });
 }
 
@@ -63,6 +67,7 @@ async function run(
 }
 
 async function update<T extends Record<string, any>>(
+  table: string,
   id: number,
   updates: Partial<T>
 ): Promise<void> {
@@ -74,18 +79,15 @@ async function update<T extends Record<string, any>>(
     }
 
     const values = fields.map((field) => updates[field]);
+    const query = `UPDATE ${table} SET ${fields.map((field) => `${field} = ?`).join(", ")} WHERE id = ?`;
 
-    getConnection().run(
-      `UPDATE positions SET ${fields.map((field) => `${field} = ?`).join(", ")} WHERE id = ?`,
-      [...values, id],
-      (err: Error | null) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve();
+    getConnection().run(query, [...values, id], (err: Error | null) => {
+      if (err) {
+        reject(err);
+        return;
       }
-    );
+      resolve();
+    });
   });
 }
 

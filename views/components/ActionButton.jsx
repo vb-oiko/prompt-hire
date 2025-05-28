@@ -15,7 +15,12 @@ const ActionButton = ({
 }) => {
   return (
     <form method={method} action={action}>
-      <button type="submit" className={className}>
+      <button
+        type="submit"
+        className={className}
+        disabled={disabled}
+        style={{ minWidth: "5rem" }}
+      >
         {label || children}
       </button>
     </form>

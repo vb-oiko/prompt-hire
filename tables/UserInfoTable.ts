@@ -347,7 +347,7 @@ export const getUserInfo = async (id: number): Promise<UserInfo> => {
     - Led the implementation of a critical data import project, projected to reduce client onboarding time by 5 times and significantly accelerate time-to-value.
     - Migrated legacy AngularJS components to React, resulting in a 20% reduction in JavaScript bundle size and a 10% improvement in page load speed, enhancing overall user experience for web applications.
     - Delivered key UI/UX enhancements that streamlined workflows and reduced user actions by 30%, improving efficiency and usability of web applications.
-    Bolt.Eu • Tallinn, Estonia • 06/2020 - 09/2024
+    Bolt.Eu • Tallinn, Estonia • 06/2021 - 09/2024
     Full Stack Engineer at Courier Engagement team, Food Delivery Vertical
     Join the Courier team as a full stack developer to support existing features and build new features for React Native courier mobile app, micro-frontend module in React admin panel and a dozen of Node.js microservices written with TypeScript related to the team's scope. Worked in cross-functional team context on cross-team company wide initiatives.
     - Delivered multiple medium- to large-scale features for web applications that boosted engagement by 10% and retention by 5% among 300K food delivery couriers, collaborating with cross-functional teams.

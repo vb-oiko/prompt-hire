@@ -96,7 +96,7 @@ async function getById(id: number): Promise<Position | undefined> {
 }
 
 async function update(id: number, position: Partial<Position>): Promise<void> {
-  await db.update(id, position);
+  await db.update("positions", id, position);
 }
 
 const PositionTable = {
