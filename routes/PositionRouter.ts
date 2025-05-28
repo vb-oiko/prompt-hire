@@ -45,7 +45,14 @@ positionRouter.get(
       return;
     }
 
-    res.render("EditPosition", { position, mode: "edit" });
+    const { tailor } = req.query;
+    const shouldTailor = tailor === "true";
+
+    res.render("EditPosition", {
+      position,
+      mode: "edit",
+      shouldTailor,
+    });
   }
 );
 
@@ -62,7 +69,7 @@ positionRouter.post(
         description: req.body.description,
         url: req.body.url,
       });
-      res.redirect(`/positions/${id}`);
+      res.redirect(`/positions/${id}/edit?tailor=true`);
     } catch (error) {
       next(error);
     }
@@ -93,10 +100,17 @@ positionRouter.post(
   "/:id",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const position = req.body;
+      const { tailor: shouldTailor, ...position } = req.body;
+      const positionId = Number(req.params.id);
+      await PositionTable.update(positionId, position);
 
-      await PositionTable.update(Number(req.params.id), position);
-      res.redirect(`/positions/${req.params.id}`);
+      if (shouldTailor === "true") {
+        PositionController.startTailoringWorkflow({
+          positionId,
+        });
+      }
+
+      res.redirect(`/positions/${positionId}`);
     } catch (error) {
       next(error);
     }

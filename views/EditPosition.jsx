@@ -7,6 +7,7 @@ const ActionButton = require("./components/ActionButton.jsx");
  * @typedef {{
  *   position: import("../tables/PositionTable.ts").Position;
  *   mode: "edit" | "create";
+ *   shouldTailor: boolean;
  * }} EditPositionProps
  */
 
@@ -15,7 +16,11 @@ const ActionButton = require("./components/ActionButton.jsx");
  * @param {EditPositionProps} props
  * @returns {JSX.Element}
  */
-const EditPosition = ({ position = {}, mode = "edit" }) => {
+const EditPosition = ({
+  position = {},
+  mode = "edit",
+  shouldTailor = false,
+}) => {
   const isCreateMode = mode === "create";
   const title = isCreateMode
     ? "Create Position"
@@ -32,6 +37,8 @@ const EditPosition = ({ position = {}, mode = "edit" }) => {
           method="POST"
           action={isCreateMode ? "/positions" : `/positions/${position.id}`}
         >
+          <input name="tailor" hidden value={shouldTailor} />
+
           <InputField
             name="url"
             label="Job URL"

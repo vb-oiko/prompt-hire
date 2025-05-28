@@ -172,9 +172,19 @@ async function generateResumeAndCoverLetter({
 }
 
 async function startTailoringWorkflow({ positionId }: { positionId: number }) {
+  console.log("Starting tailoring workflow for position:", positionId);
   await tailorResume({ positionId });
+  console.log(
+    "Tailored resume, starting generating cover letter for position:",
+    positionId
+  );
   await tailorCoverLetter({ positionId });
+  console.log(
+    "Tailored cover letter, starting generating Google docs for position:",
+    positionId
+  );
   await generateResumeAndCoverLetter({ positionId });
+  console.log("Completed tailoring workflow for position:", positionId);
 }
 
 const PositionController = {
