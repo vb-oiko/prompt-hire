@@ -30,25 +30,38 @@ const EditContact = ({ contact, mode = "edit", positionId }) => {
 
         <form
           method="POST"
-          action={`/contacts${isCreateMode ? "" : `/${contact.id}`}`}
+          action={`/contacts${isCreateMode ? "/new" : `/${contact.id}`}`}
         >
           <input name="positionId" hidden defaultValue={positionId} />
 
-          <InputField
-            name="firstName"
-            label="First Name"
-            type="text"
-            defaultValue={contact.firstName || ""}
-            required
-          />
+          {isCreateMode && (
+            <InputField
+              name="fullName"
+              label="Full Name"
+              type="text"
+              required
+            />
+          )}
 
-          <InputField
-            name="lastName"
-            label="Last Name"
-            type="text"
-            defaultValue={contact.lastName || ""}
-            required
-          />
+          {!isCreateMode && (
+            <>
+              <InputField
+                name="firstName"
+                label="First Name"
+                type="text"
+                defaultValue={contact.firstName || ""}
+                required
+              />
+
+              <InputField
+                name="lastName"
+                label="Last Name"
+                type="text"
+                defaultValue={contact.lastName || ""}
+                required
+              />
+            </>
+          )}
 
           <InputField
             name="linkedin"

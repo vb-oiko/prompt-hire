@@ -51,17 +51,40 @@ contactRouter.get(
 
 // Create a new contact
 contactRouter.post(
-  "/",
+  "/new",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const contactId = await ContactTable.create(req.body);
+      const { fullName, linkedin, positionId } = req.body;
+
+      const [firstName, lastName] = fullName.split(" ");
+
+      const contactId = await ContactTable.create({
+        firstName,
+        lastName,
+        linkedin,
+        positionId,
+      });
 
       await MessageController.createConnectionRequestMessage(
         contactId,
-        req.body.positionId
+        positionId
       );
 
       res.redirect(`/contacts/${contactId}`);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Update a contact
+contactRouter.post(
+  "/:id",
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      await ContactTable.update(Number(req.params.id), req.body);
+
+      res.redirect(`/contacts/${req.params.id}`);
     } catch (error) {
       next(error);
     }
