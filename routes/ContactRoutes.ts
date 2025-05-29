@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import ContactTable from "../tables/ContactTable.ts";
 import MessageTable from "../tables/MessageTable.ts";
 import MessageController from "../controllers/MessageController.ts";
+import PositionTable from "../tables/PositionTable.ts";
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -26,7 +27,22 @@ contactRouter.get(
         search,
       });
 
-      res.render("ListContacts", { contacts, positionId, search });
+      if (positionId) {
+        const position = await PositionTable.getById(positionId);
+        if (!position) {
+          throw new Error("Position not found");
+        }
+
+        res.render("ListContacts", {
+          contacts,
+          position,
+          search,
+        });
+
+        return;
+      }
+
+      res.render("ListContacts", { contacts, search });
     } catch (error) {
       next(error);
     }
@@ -70,7 +86,7 @@ contactRouter.post(
         positionId
       );
 
-      res.redirect(`/contacts/${contactId}`);
+      res.redirect(`/contacts/?positionId=${positionId}`);
     } catch (error) {
       next(error);
     }

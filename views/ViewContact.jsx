@@ -5,6 +5,7 @@ const DisplayUrlField = require("./components/DisplayUrlField.jsx");
 const DisplayField = require("./components/DisplayField.jsx");
 const MoreActionsDropdown = require("./components/MoreActionsDropdown.jsx");
 const MessageForm = require("./components/MessageForm.jsx");
+const LinkButton = require("./components/LinkButton.jsx");
 
 /**
  * @typedef {{
@@ -40,6 +41,11 @@ const ViewContact = ({ contact, messages }) => {
               <strong>{contact.positionCompany}</strong>
             </a>
           </p>
+          <LinkButton
+            href={`/contacts?positionId=${contact.positionId}`}
+            label="Back to contacts"
+          />
+
           <ActionButton
             action={`/contacts/${contact.id}/edit`}
             method="GET"

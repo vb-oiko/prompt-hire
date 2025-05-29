@@ -49,9 +49,7 @@ const ViewPosition = ({ position = {} }) => {
           <a
             href={`/contacts?positionId=${position.id}`}
             role="button"
-            style={{
-              height: "min-content",
-            }}
+            className="h-min-content"
           >
             Contacts
           </a>

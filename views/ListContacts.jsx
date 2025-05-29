@@ -1,11 +1,12 @@
 const React = require("react");
 const Layout = require("./components/Layout.jsx");
 const { formatDate } = require("./utils/utils.ts");
+const Page = require("./components/Page.jsx");
 
 /**
  * @typedef {{
- *   positions: import("../tables/PositionTable.ts").Position[];
- *   positionId?: number;
+ *   contacts: import("../tables/ContactTable.ts").Contact[];
+ *   position?: import("../tables/PositionTable.ts").Position;
  *   search?: string;
  * }} ListContactsProps
  */
@@ -14,17 +15,24 @@ const { formatDate } = require("./utils/utils.ts");
  * Positions view component
  * @param {ListPositionsProps} props
  */
-const ListContacts = ({ contacts = [], positionId, search }) => {
+const ListContacts = ({ contacts = [], position }) => {
+  const positionId = position?.id;
+  const title = position
+    ? `${position.title} at ${position.company} - Contacts`
+    : "Contacts";
+
   return (
-    <Layout title="Contacts List">
-      <article>
-        <header style={{ display: "flex", justifyContent: "end" }}>
-          {positionId && (
+    <Layout title={title}>
+      <Page
+        title={<a href={`/positions/${positionId}`}>{title}</a>}
+        headerContent={
+          positionId && (
             <a href={`/contacts/new?positionId=${positionId}`} role="button">
               Add Contact
             </a>
-          )}
-        </header>
+          )
+        }
+      >
         <table>
           <thead>
             <tr>
@@ -57,7 +65,7 @@ const ListContacts = ({ contacts = [], positionId, search }) => {
             )}
           </tbody>
         </table>
-      </article>
+      </Page>
     </Layout>
   );
 };

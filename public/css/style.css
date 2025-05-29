@@ -5,3 +5,11 @@
 .w-auto {
   width: auto !important;
 }
+
+.h-min-content {
+  height: min-content;
+}
+
+.min-w-20 {
+  min-width: 5rem;
+}
