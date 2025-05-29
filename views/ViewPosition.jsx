@@ -5,6 +5,7 @@ const DisplayField = require("./components/DisplayField");
 const DisplayPreFormattedField = require("./components/DisplayPreFormattedField");
 const DisplayUrlField = require("./components/DisplayUrlField");
 const MoreActionsDropdown = require("./components/MoreActionsDropdown");
+const { POSITION_STATUS_LABEL_MAP } = require("../tables/PositionTable.ts");
 
 /**
  * Position detail view component
@@ -65,19 +66,13 @@ const ViewPosition = ({ position = {} }) => {
           label="Description"
           value={position.description}
         />
-
-        <DisplayField label="Title" value={position.title} />
-        <DisplayField label="Company" value={position.company} />
-        <DisplayField label="Location" value={position.location} />
-        <DisplayUrlField label="Position Page" value={position.url} />
-        <DisplayPreFormattedField
-          label="Description"
-          value={position.description}
-        />
         <DisplayField label="Salary" value={position.salary} />
         <DisplayField label="Skills" value={position.skills} />
         <DisplayField label="Tags" value={position.tags} />
-        <DisplayField label="Status" value={position.status} />
+        <DisplayField
+          label="Status"
+          value={POSITION_STATUS_LABEL_MAP[position.status]}
+        />
         <DisplayPreFormattedField
           label="Optimized Resume Text"
           value={position.optimizedResumeText}

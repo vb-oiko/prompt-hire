@@ -1,6 +1,7 @@
 const React = require("react");
 const Layout = require("./components/Layout.jsx");
 const { formatDate } = require("./utils/utils.ts");
+const { POSITION_STATUS_LABEL_MAP } = require("../tables/PositionTable.ts");
 
 /**
  * @typedef {{
@@ -43,7 +44,7 @@ const ListPositions = ({ positions = [] }) => {
                   </td>
                   <td>{position.company}</td>
                   <td>{position.location}</td>
-                  <td>{position.status}</td>
+                  <td>{POSITION_STATUS_LABEL_MAP[position.status]}</td>
                 </tr>
               ))
             )}

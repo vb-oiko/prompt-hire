@@ -1,7 +1,9 @@
 const React = require("react");
 const Layout = require("./components/Layout.jsx");
 const InputField = require("./components/InputField.jsx");
-const ActionButton = require("./components/ActionButton.jsx");
+const { getOptionsFromLabelMap } = require("./utils/utils.ts");
+const { POSITION_STATUS_LABEL_MAP } = require("../tables/PositionTable.ts");
+const SelectField = require("./components/SelectField.jsx");
 
 /**
  * @typedef {{
@@ -24,7 +26,7 @@ const EditPosition = ({
   const isCreateMode = mode === "create";
   const title = isCreateMode
     ? "Create Position"
-    : `Edit: ${position.title || ""}`;
+    : `${position.title || ""} at ${position.company || ""}`;
 
   return (
     <Layout title={`${title} - PromptHire`}>
@@ -38,14 +40,22 @@ const EditPosition = ({
           action={isCreateMode ? "/positions" : `/positions/${position.id}`}
         >
           <input name="tailor" hidden value={shouldTailor} />
-
-          <InputField
-            name="url"
-            label="Job URL"
-            type="url"
-            defaultValue={position.url || ""}
-            required
-          />
+          <div className="grid">
+            <InputField
+              name="url"
+              label="Job URL"
+              type="url"
+              defaultValue={position.url || ""}
+              required
+            />
+            <SelectField
+              name="status"
+              label="Status"
+              options={getOptionsFromLabelMap(POSITION_STATUS_LABEL_MAP)}
+              defaultValue={position.status || ""}
+              placeholder="Select Status"
+            />
+          </div>
 
           <InputField
             name="description"

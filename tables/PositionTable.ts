@@ -5,6 +5,7 @@ export const POSITION_STATUS = {
   PARSED: "parsed",
   APPLIED: "applied",
   ARCHIVED: "archived",
+  REJECTED: "rejected",
 } as const;
 
 export const POSITION_STATUSES = [
@@ -12,7 +13,16 @@ export const POSITION_STATUSES = [
   POSITION_STATUS.PARSED,
   POSITION_STATUS.APPLIED,
   POSITION_STATUS.ARCHIVED,
+  POSITION_STATUS.REJECTED,
 ] as const;
+
+export const POSITION_STATUS_LABEL_MAP = {
+  [POSITION_STATUS.NEW]: "New",
+  [POSITION_STATUS.PARSED]: "Parsed",
+  [POSITION_STATUS.APPLIED]: "Applied",
+  [POSITION_STATUS.ARCHIVED]: "Archived",
+  [POSITION_STATUS.REJECTED]: "Rejected",
+} as const;
 
 export type PositionStatus = (typeof POSITION_STATUSES)[number];
 
@@ -27,7 +37,7 @@ export const CREATE_POSITIONS_TABLE_STATEMENT = `
         salary TEXT,
         skills TEXT,
         tags TEXT,
-        status TEXT NOT NULL CHECK(status IN (${POSITION_STATUSES.map((status) => `'${status}'`).join(",")})) DEFAULT ${POSITION_STATUS.NEW},
+        status TEXT NOT NULL DEFAULT ${POSITION_STATUS.NEW},
         userId INTEGER NOT NULL DEFAULT 0,
         optimizedResumeText TEXT,
         optimizedResumeJson TEXT,
