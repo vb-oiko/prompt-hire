@@ -1,6 +1,8 @@
 import ContactTable from "../tables/ContactTable";
 import MessageTable from "../tables/MessageTable";
 import PositionTable from "../tables/PositionTable";
+import { generateLinkedinFollowUp } from "../services/ai/prompts/LinkedinFollowUpPrompt";
+import { STRUCTURED_RESUME } from "../tables/UserInfoTable";
 
 async function createConnectionRequestMessage(
   contactId: number,
@@ -26,8 +28,37 @@ async function createConnectionRequestMessage(
   });
 }
 
+async function createLinkedinFollowUpMessage(contactId: number) {
+  const contact = await ContactTable.getById(contactId);
+
+  if (!contact) {
+    throw new Error("Contact not found");
+  }
+
+  const position = await PositionTable.getById(contact.positionId);
+
+  if (!position) {
+    throw new Error("Position not found");
+  }
+
+  const { message } = await generateLinkedinFollowUp({
+    contactName: contact.firstName,
+    positionTitle: position.title,
+    resume: JSON.stringify(STRUCTURED_RESUME, null, 2),
+    jobDescription: position.description,
+  });
+
+  await MessageTable.create({
+    contactId,
+    positionId: position.id,
+    text: message,
+    type: "linkedin_follow_up",
+  });
+}
+
 const MessageController = {
   createConnectionRequestMessage,
+  createLinkedinFollowUpMessage,
 };
 
 export default MessageController;

@@ -143,4 +143,15 @@ contactRouter.post(
   }
 );
 
+contactRouter.post(
+  "/:id/generate-linkedin-follow-up-message",
+  async function (req: Request, res: Response, next: NextFunction) {
+    await MessageController.createLinkedinFollowUpMessage(
+      Number(req.params.id)
+    );
+
+    res.redirect(`/contacts/${req.params.id}`);
+  }
+);
+
 export default contactRouter;

@@ -26,6 +26,10 @@ const ViewContact = ({ contact, messages }) => {
       label: "Connection Request ✨",
       action: `/contacts/${contact.id}/generate-linkedin-connection-request-message`,
     },
+    {
+      label: "LinkedIn Follow-Up ✨",
+      action: `/contacts/${contact.id}/generate-linkedin-follow-up-message`,
+    },
   ];
   return (
     <Layout title={`${contact.firstName} ${contact.lastName} - PromptHire`}>
@@ -62,7 +66,7 @@ const ViewContact = ({ contact, messages }) => {
         <br />
 
         {messages.map((message) => (
-          <MessageForm message={message} />
+          <MessageForm key={message.id} message={message} />
         ))}
       </article>
     </Layout>
