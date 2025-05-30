@@ -1,6 +1,17 @@
 const React = require("react");
 const DEFAULT_TITLE = "PromptHire";
 
+const NAV_LINKS = [
+  {
+    label: "Positions",
+    href: "/positions",
+  },
+  {
+    label: "Contacts",
+    href: "/contacts",
+  },
+];
+
 const Layout = ({ title = DEFAULT_TITLE, children }) => {
   return (
     <html lang="en">
@@ -25,9 +36,11 @@ const Layout = ({ title = DEFAULT_TITLE, children }) => {
               </li>
             </ul>
             <ul>
-              <li>
-                <a href="/positions">Positions</a>
-              </li>
+              {NAV_LINKS.map((link) => (
+                <li key={link.label}>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
             </ul>
           </nav>
         </header>

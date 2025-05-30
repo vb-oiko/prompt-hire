@@ -17,14 +17,22 @@ const Page = require("./components/Page.jsx");
  */
 const ListContacts = ({ contacts = [], position }) => {
   const positionId = position?.id;
-  const title = position
-    ? `${position.title} at ${position.company} - Contacts`
-    : "Contacts";
+
+  const title = position ? (
+    <p>
+      <span>Contacts for </span>
+      <a href={`/positions/${positionId}`}>
+        {position.title} at {position.company}
+      </a>
+    </p>
+  ) : (
+    "Contacts"
+  );
 
   return (
     <Layout title={title}>
       <Page
-        title={<a href={`/positions/${positionId}`}>{title}</a>}
+        title={title}
         headerContent={
           positionId && (
             <a href={`/contacts/new?positionId=${positionId}`} role="button">
@@ -38,6 +46,7 @@ const ListContacts = ({ contacts = [], position }) => {
             <tr>
               <th>Date</th>
               <th>Name</th>
+              <th>Company</th>
               <th>LinkedIn</th>
             </tr>
           </thead>
@@ -55,6 +64,7 @@ const ListContacts = ({ contacts = [], position }) => {
                       {contact.firstName} {contact.lastName}
                     </a>
                   </td>
+                  <td>{contact.positionCompany}</td>
                   <td>
                     <a href={contact.linkedin} target="_blank">
                       {contact.linkedin}

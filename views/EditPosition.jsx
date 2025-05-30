@@ -48,13 +48,15 @@ const EditPosition = ({
               defaultValue={position.url || ""}
               required
             />
-            <SelectField
-              name="status"
-              label="Status"
-              options={getOptionsFromLabelMap(POSITION_STATUS_LABEL_MAP)}
-              defaultValue={position.status || ""}
-              placeholder="Select Status"
-            />
+            {!isCreateMode && (
+              <SelectField
+                name="status"
+                label="Status"
+                options={getOptionsFromLabelMap(POSITION_STATUS_LABEL_MAP)}
+                defaultValue={position.status || ""}
+                placeholder="Select Status"
+              />
+            )}
           </div>
 
           <InputField
