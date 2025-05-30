@@ -56,13 +56,18 @@ async function list({
     WHERE 1=1
   `;
 
+  const params: any[] = [];
+
   if (positionId) {
     query += ` AND positionId = ?`;
+    params.push(positionId);
   }
   if (search) {
-    query += ` AND (firstName LIKE ? OR lastName LIKE ? OR linkedin LIKE ?)`;
+    query += ` AND (firstName LIKE ? OR lastName LIKE ? OR positionCompany LIKE ?)`;
+    params.push(`%${search}%`, `%${search}%`, `%${search}%`);
   }
-  return await db.all(query, [positionId, search, search, search]);
+
+  return await db.all(query, params);
 }
 
 async function listByPositionId(positionId: number): Promise<Contact[]> {

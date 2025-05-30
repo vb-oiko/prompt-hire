@@ -24,7 +24,7 @@ const Page = ({ children, title, headerContent }) => {
         }}
       >
         {title}
-        <div>{headerContent}</div>
+        <div className="grid">{headerContent}</div>
       </header>
       {children}
     </article>

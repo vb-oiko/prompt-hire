@@ -1,7 +1,8 @@
 const React = require("react");
 const Layout = require("./components/Layout.jsx");
-const { formatDate } = require("./utils/utils.ts");
+const { formatDate, formatLinkedin } = require("./utils/utils.ts");
 const Page = require("./components/Page.jsx");
+const LinkButton = require("./components/LinkButton.jsx");
 
 /**
  * @typedef {{
@@ -15,7 +16,7 @@ const Page = require("./components/Page.jsx");
  * Positions view component
  * @param {ListPositionsProps} props
  */
-const ListContacts = ({ contacts = [], position }) => {
+const ListContacts = ({ contacts = [], position, search }) => {
   const positionId = position?.id;
 
   const title = position ? (
@@ -34,11 +35,25 @@ const ListContacts = ({ contacts = [], position }) => {
       <Page
         title={title}
         headerContent={
-          positionId && (
-            <a href={`/contacts/new?positionId=${positionId}`} role="button">
-              Add Contact
-            </a>
-          )
+          <form action={`/contacts`} method="GET" className="flex">
+            <input name="positionId" hidden value={positionId} />
+            <input
+              name="search"
+              type="text"
+              placeholder="Search"
+              className="w-20"
+              defaultValue={search}
+            />
+            <button type="submit" className="w-fit h-min-content">
+              Search
+            </button>
+            {positionId && (
+              <LinkButton
+                href={`/contacts/new?positionId=${positionId}`}
+                label="Add Contact"
+              />
+            )}
+          </form>
         }
       >
         <table>
@@ -67,7 +82,9 @@ const ListContacts = ({ contacts = [], position }) => {
                   <td>{contact.positionCompany}</td>
                   <td>
                     <a href={contact.linkedin} target="_blank">
-                      {contact.linkedin}
+                      <span className="overflow-ellipsis w-40">
+                        {formatLinkedin(contact.linkedin)}
+                      </span>
                     </a>
                   </td>
                 </tr>

@@ -21,7 +21,9 @@ contactRouter.get(
       const positionId = req.query.positionId
         ? Number(req.query.positionId)
         : undefined;
+
       const search = req.query.search ? String(req.query.search) : undefined;
+
       const contacts = await ContactTable.list({
         positionId,
         search,

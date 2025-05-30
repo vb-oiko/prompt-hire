@@ -16,15 +16,11 @@ const React = require("react");
  */
 const LinkButton = ({ label, href, variant = "primary", disabled = false }) => {
   return disabled ? (
-    <button className={`${variant} min-w-20`} disabled>
+    <button className={`${variant} min-w-20 nowrap`} disabled>
       {label}
     </button>
   ) : (
-    <a
-      href={href}
-      role="button"
-      className={`h-min-content ${variant} min-w-20`}
-    >
+    <a href={href} role="button" className={`h-min-content ${variant} no-wrap`}>
       {label}
     </a>
   );

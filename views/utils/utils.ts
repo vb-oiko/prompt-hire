@@ -8,3 +8,7 @@ export function getOptionsFromLabelMap(labelMap: Record<string, string>) {
     value,
   }));
 }
+
+export function formatLinkedin(linkedin: string) {
+  return linkedin.replace("https://www.linkedin.com/in/", "").replace("/", "");
+}
