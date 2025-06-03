@@ -88,7 +88,7 @@ contactRouter.post(
         positionId
       );
 
-      res.redirect(`/contacts/?positionId=${positionId}`);
+      res.redirect(`/contacts/${contactId}`);
     } catch (error) {
       next(error);
     }
@@ -120,7 +120,11 @@ contactRouter.get(
     }
 
     const messages = await MessageTable.listByContactId(contact.id);
-    res.render("ViewContact", { contact, messages });
+    res.render("ViewContact", {
+      contact,
+      messages,
+      positionId: contact.positionId,
+    });
   }
 );
 

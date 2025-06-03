@@ -10,8 +10,8 @@ const LinkButton = require("./components/LinkButton.jsx");
 /**
  * @typedef {{
  *   contact: import("../tables/ContactTable.ts").Contact;
- *   position: import("../tables/PositionTable.ts").Position;
  *   messages: import("../tables/MessageTable.ts").Message[];
+ *   positionId: number;
  * }} ViewContactProps
  */
 
@@ -20,7 +20,7 @@ const LinkButton = require("./components/LinkButton.jsx");
  * @param {ViewContactProps} props
  * @returns {JSX.Element}
  */
-const ViewContact = ({ contact, messages }) => {
+const ViewContact = ({ contact, messages, positionId }) => {
   const actions = [
     {
       label: "Connection Request ✨",
@@ -45,9 +45,10 @@ const ViewContact = ({ contact, messages }) => {
               <strong>{contact.positionCompany}</strong>
             </a>
           </p>
+
           <LinkButton
-            href={`/contacts?positionId=${contact.positionId}`}
-            label="Back to contacts"
+            href={`/contacts/new?positionId=${contact.positionId}`}
+            label="Add another contact"
           />
 
           <ActionButton
